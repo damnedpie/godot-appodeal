@@ -48,7 +48,7 @@ signal rewarded_video_clicked()
 signal rewarded_video_finished(amount, currency)
 signal rewarded_video_closed(finished)
 signal rewarded_video_expired()
-signal initialization_finished(error_list)
+signal initialization_finished(message_string)
 
 var _appodeal : JNISingleton = null
 
@@ -113,6 +113,7 @@ func showRewardedAd() -> void:
 #Initializes the SDK. If no consent settings provided before calling this, will also summon ConsentScreen.
 func initialize(appKey:String, adTypes) -> void:
 	_appodeal.initialize(appKey, adTypes)
+	_appodeal.connect("initialization_finished", self, "_initialization_finished") #Emitted when initialization is complete
 
 #Returns true if Appodeal was initialized for the given ad type.
 func isInitializedForAdType(adType:int) -> bool:
@@ -167,7 +168,7 @@ func setTestingEnabled(enabled:bool) -> void:
 #Returns false if an ad can't be shown for any reason.
 func canShow(showStyle:int) -> bool:
 	return _appodeal.canShow(showStyle)
-	
+
 #Returns false if an ad for given placement can't be shown for any reason (see Appodeal Wiki about placements).
 func canShowForPlacement(showStyle:int, placementName:String) -> bool:
 	return _appodeal.canShowForPlacement(showStyle, placementName)
@@ -238,8 +239,6 @@ func muteVideosIfCallsMuted(mute:bool) -> void:
 
 #Connects JNISingletone signals with the callback functions in this script.
 func connectSignals() -> void:
-	_appodeal.connect("initialization_finished", self, "_initialization_finished") #Emitted when initialization is complete
-	
 	_appodeal.connect("interstitial_loaded", self, "_interstitial_loaded") #Emitted when interstitial has been loaded and cached (precached:bool)
 	_appodeal.connect("interstitial_load_failed", self, "_interstitial_load_failed") #Emitted when interstitial failed to load
 	_appodeal.connect("interstitial_shown", self, "_interstitial_shown") #Emitted when interstitial has started to show
@@ -247,13 +246,13 @@ func connectSignals() -> void:
 	_appodeal.connect("interstitial_clicked", self, "_interstitial_clicked") #Emitted when interstitial clicked
 	_appodeal.connect("interstitial_closed", self, "_interstitial_closed") #Emitted when interstitial was closed (the usual scenario when the gameplay continues)
 	_appodeal.connect("interstitial_expired", self, "_interstitial_expired") #Emitted when cached interstitial has expired and needs recache
-	
+
 	_appodeal.connect("banner_loaded", self, "_banner_loaded") #Emitted when banner has been loaded (precached:bool)
 	_appodeal.connect("banner_load_failed", self, "_banner_load_failed") #Emitted when banner failed to load
 	_appodeal.connect("banner_shown", self, "_banner_shown") #Emitted when banner has been shown
 	_appodeal.connect("banner_clicked", self, "_banner_clicked") #Emitted when banner has been clicked
 	_appodeal.connect("banner_expired", self, "_banner_expired") #Emitted when banner has expired
-	
+
 	_appodeal.connect("rewarded_video_loaded", self, "_rewarded_video_loaded") #Emitted when rewarded ad has been loaded and cached (precached:bool)
 	_appodeal.connect("rewarded_video_load_failed", self, "_rewarded_video_load_failed") #Emitted when rewarded ad failed to load
 	_appodeal.connect("rewarded_video_shown", self, "_rewarded_video_shown") #Emitted when rewarded ad has started to show
@@ -267,9 +266,9 @@ func connectSignals() -> void:
 #---CALLBACKS---#
 #---------------#
 
-func _initialization_finished(error_list) -> void:
-	emit_signal("initialization_finished", error_list)
-	print("%s: initialization finished with %s errors" % [name, error_list.size()])
+func _initialization_finished(message_string) -> void:
+	emit_signal("initialization_finished", message_string)
+	print("%s: initialization finished with message: " % [name, message_string])
 
 func _interstitial_load_failed() -> void:
 	emit_signal("interstitial_load_failed")

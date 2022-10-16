@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +88,7 @@ public class GodotAppodeal extends GodotPlugin {
         signalInfoSet.add(new SignalInfo("rewarded_video_closed", Boolean.class));
         signalInfoSet.add(new SignalInfo("rewarded_video_expired"));
         // Other
-        signalInfoSet.add(new SignalInfo("initialization_finished", Array.class));
+        signalInfoSet.add(new SignalInfo("initialization_finished", String.class));
         return  signalInfoSet;
     }
 
@@ -298,11 +299,13 @@ public class GodotAppodeal extends GodotPlugin {
                 new ApdInitializationCallback() {
                     @Override
                     public void onInitializationFinished(List<ApdInitializationError> list) {
-                        if (!list.isEmpty()) {
-                            emitSignal("initialization_finished", list.toArray());
+                        if (list != null && !list.isEmpty()) {
+                            emitSignal("initialization_finished", list.toString());
                         }
                         else {
-                            emitSignal("initialization_finished", null);
+                            List<String> emptyList = new ArrayList<String>();
+                            emptyList.add("Initialization OK!");
+                            emitSignal("initialization_finished", emptyList.toString());
                         }
                     }
                 }
