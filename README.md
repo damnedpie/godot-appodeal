@@ -23,7 +23,7 @@ It's mandatory to have the com.google.android.gms.ads.APPLICATION_ID permission 
 <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 ```
 
-Make sure to add it between <!--CHUNK_USER_PERMISSIONS_BEGIN--> and <!--CHUNK_USER_PERMISSIONS_END--> comments so it won't get deleted by Godot on export.
+Make sure to add it between `<!--CHUNK_USER_PERMISSIONS_BEGIN-->` and `<!--CHUNK_USER_PERMISSIONS_END-->` comments so it won't get deleted by Godot on export.
 
 ### AdMob
 
