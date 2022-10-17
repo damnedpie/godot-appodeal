@@ -268,7 +268,7 @@ func connectSignals() -> void:
 
 func _initialization_finished(message_string) -> void:
 	emit_signal("initialization_finished", message_string)
-	print("%s: initialization finished with message: " % [name, message_string])
+	print("%s: initialization finished with message: %s" % [name, message_string])
 
 func _interstitial_load_failed() -> void:
 	emit_signal("interstitial_load_failed")
