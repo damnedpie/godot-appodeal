@@ -300,12 +300,20 @@ public class GodotAppodeal extends GodotPlugin {
                     @Override
                     public void onInitializationFinished(List<ApdInitializationError> list) {
                         if (list != null && !list.isEmpty()) {
-                            emitSignal("initialization_finished", list.toString());
+                            String message = "";
+                            for (ApdInitializationError e : list) {
+                                if (e.getMessage() != null) {
+                                    message += " | ";
+                                    message += e.getMessage();
+                                }
+                            }
+                            if (message == ""){
+                                message = "Initialization OK!";
+                            }
+                            emitSignal("initialization_finished", message);
                         }
                         else {
-                            List<String> emptyList = new ArrayList<String>();
-                            emptyList.add("Initialization OK!");
-                            emitSignal("initialization_finished", emptyList.toString());
+                            emitSignal("initialization_finished", "Initialization OK!");
                         }
                     }
                 }
