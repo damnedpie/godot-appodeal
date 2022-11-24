@@ -1,5 +1,5 @@
 # godot-appodeal-3.x.x
-Appodeal SDK 3.0.0 Android plugin for Godot.
+Appodeal SDK 3.0.1 Android plugin for Godot.
 
 ## Setup
 
@@ -59,11 +59,11 @@ You can customize what ad network adapters and services are going to be included
 
 name="GodotAppodeal"
 binary_type="local"
-binary="GodotAppodeal.3.0.0.release.aar"
+binary="GodotAppodeal.3.0.1.release.aar"
 
 [dependencies]
 
-remote=["com.appodeal.ads:sdk:3.0.0.+"]
+remote=["com.appodeal.ads:sdk:3.0.1.+"]
 custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
 ```
 
@@ -73,26 +73,26 @@ This is equal to the following:
 
 name="GodotAppodeal"
 binary_type="local"
-binary="GodotAppodeal.3.0.0.release.aar"
+binary="GodotAppodeal.3.0.1.release.aar"
 
 [dependencies]
 
 remote=[
-"com.appodeal.ads.sdk:core:3.0.0",
-"com.appodeal.ads.sdk.networks:adcolony:3.0.0.2",
-"com.appodeal.ads.sdk.networks:admob:3.0.0.1",
-"com.appodeal.ads.sdk.networks:applovin:3.0.0.1",
-"com.appodeal.ads.sdk.networks:bidmachine:3.0.0.2",
-"com.appodeal.ads.sdk.networks:facebook:3.0.0.2",
-"com.appodeal.ads.sdk.networks:ironsource:3.0.0.1",
-"com.appodeal.ads.sdk.networks:my_target:3.0.0.2",
-"com.appodeal.ads.sdk.networks:unity_ads:3.0.0.0",
-"com.appodeal.ads.sdk.networks:vungle:3.0.0.2",
-"com.appodeal.ads.sdk.networks:yandex:3.0.0.1",
-"com.appodeal.ads.sdk.services:adjust:3.0.0.0",
-"com.appodeal.ads.sdk.services:appsflyer:3.0.0.1",
-"com.appodeal.ads.sdk.services:firebase:3.0.0.0",
-"com.appodeal.ads.sdk.services:facebook_analytics:3.0.0.1",
+"com.appodeal.ads.sdk:core:3.0.1",
+"com.appodeal.ads.sdk.networks:adcolony:3.0.1.0",
+"com.appodeal.ads.sdk.networks:admob:3.0.1.0",
+"com.appodeal.ads.sdk.networks:applovin:3.0.1.0",
+"com.appodeal.ads.sdk.networks:bidmachine:3.0.1.0",
+"com.appodeal.ads.sdk.networks:facebook:3.0.1.0",
+"com.appodeal.ads.sdk.networks:ironsource:3.0.1.0",
+"com.appodeal.ads.sdk.networks:my_target:3.0.1.0",
+"com.appodeal.ads.sdk.networks:unity_ads:3.0.1.0",
+"com.appodeal.ads.sdk.networks:vungle:3.0.1.0",
+"com.appodeal.ads.sdk.networks:yandex:3.0.1.0",
+"com.appodeal.ads.sdk.services:adjust:3.0.1.0",
+"com.appodeal.ads.sdk.services:appsflyer:3.0.1.0",
+"com.appodeal.ads.sdk.services:firebase:3.0.1.0",
+"com.appodeal.ads.sdk.services:facebook_analytics:3.0.1.0",
 ]
 custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
 ```
@@ -103,25 +103,25 @@ In order to remove an adapter or service from the plugin, simply delete the line
 
 name="GodotAppodeal"
 binary_type="local"
-binary="GodotAppodeal.3.0.0.release.aar"
+binary="GodotAppodeal.3.0.1.release.aar"
 
 [dependencies]
 
 remote=[
-"com.appodeal.ads.sdk:core:3.0.0",
-"com.appodeal.ads.sdk.networks:adcolony:3.0.0.2	",
-"com.appodeal.ads.sdk.networks:applovin:3.0.0.1	",
-"com.appodeal.ads.sdk.networks:bidmachine:3.0.0.2",
-"com.appodeal.ads.sdk.networks:facebook:3.0.0.2",
-"com.appodeal.ads.sdk.networks:ironsource:3.0.0.1",
-"com.appodeal.ads.sdk.networks:my_target:3.0.0.2",
-"com.appodeal.ads.sdk.networks:unity_ads:3.0.0.0",
-"com.appodeal.ads.sdk.networks:vungle:3.0.0.2",
-"com.appodeal.ads.sdk.networks:yandex:3.0.0.1",
-"com.appodeal.ads.sdk.services:adjust:3.0.0.0",
-"com.appodeal.ads.sdk.services:appsflyer:3.0.0.1",
-"com.appodeal.ads.sdk.services:firebase:3.0.0.0",
-"com.appodeal.ads.sdk.services:facebook_analytics:3.0.0.1",
+"com.appodeal.ads.sdk:core:3.0.1",
+"com.appodeal.ads.sdk.networks:adcolony:3.0.1.0",
+"com.appodeal.ads.sdk.networks:applovin:3.0.1.0",
+"com.appodeal.ads.sdk.networks:bidmachine:3.0.1.0",
+"com.appodeal.ads.sdk.networks:facebook:3.0.1.0",
+"com.appodeal.ads.sdk.networks:ironsource:3.0.1.0",
+"com.appodeal.ads.sdk.networks:my_target:3.0.1.0",
+"com.appodeal.ads.sdk.networks:unity_ads:3.0.1.0",
+"com.appodeal.ads.sdk.networks:vungle:3.0.1.0",
+"com.appodeal.ads.sdk.networks:yandex:3.0.1.0",
+"com.appodeal.ads.sdk.services:adjust:3.0.1.0",
+"com.appodeal.ads.sdk.services:appsflyer:3.0.1.0",
+"com.appodeal.ads.sdk.services:firebase:3.0.1.0",
+"com.appodeal.ads.sdk.services:facebook_analytics:3.0.1.0",
 ]
 custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
 ```
@@ -166,3 +166,8 @@ enum ShowStyle {
 ## Building
 
 If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template (godot-lib.release.aar) for the engine version you are using at ``godotappodeal\libs`` folder.
+
+## Changelog
+
+Appodeal SDK 3.0.1: added AdRevenueCallback for custom project analytics. In your Godot project you can receive RevenueInfo from this callback via adRevenueReceived(revenueInfo:Dictionary) implemented in GodotAppodeal.gd
+Contents and meaning of the dictionary can be found [here](https://wiki.appodeal.com/en/android/get-started/advanced/ad-revenue-callbacks) or in GodotAppodeal.gd.

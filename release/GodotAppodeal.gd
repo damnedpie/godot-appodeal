@@ -49,6 +49,7 @@ signal rewarded_video_finished(amount, currency)
 signal rewarded_video_closed(finished)
 signal rewarded_video_expired()
 signal initialization_finished(message_string)
+signal adRevenueReceived(revenueInfo)
 
 var _appodeal : JNISingleton = null
 
@@ -65,7 +66,9 @@ func _ready() -> void:
 		initialize(ProjectSettings.get_setting("Appodeal/AppKey"), AdType.INTERSTITIAL|AdType.REWARDED_VIDEO)
 
 		#It's easier to autocache ads rather than to cache them manually, however this might cause
-		#performance issues if the ads will have to cache during the gameplay.
+		#performance issues if the ads will have to cache during the gameplay. Also autocaching tends
+		#to damage your fillrate and display rate drastically when it comes to ads other than banners,
+		#so you should probably consider manual caching instead.
 
 		setAutocache(true, AdType.INTERSTITIAL)
 
@@ -262,6 +265,10 @@ func connectSignals() -> void:
 	_appodeal.connect("rewarded_video_closed", self, "_rewarded_video_closed") #Emitted when rewarded ad was closed (the usual scenario when the gameplay continues)
 	_appodeal.connect("rewarded_video_expired", self, "_rewarded_video_expired") #Emitted when cached rewarded ad has expired and needs recache
 
+	_appodeal.connect("adRevenueReceived", self, "_adRevenueReceived") #Emitted when ad revenue has been received
+
+
+
 #---------------#
 #---CALLBACKS---#
 #---------------#
@@ -269,6 +276,25 @@ func connectSignals() -> void:
 func _initialization_finished(message_string) -> void:
 	emit_signal("initialization_finished", message_string)
 	print("%s: initialization finished with message: %s" % [name, message_string])
+
+func _adRevenueReceived(revenueInfo:Dictionary) -> void:
+    #Dictionary contents will be as follows:
+    # networkName : String - The name of the ad network, guaranteed not to be null.
+    # demandSource : String - The demand source name and bidder name in case of impression from real-time bidding, guaranteed not to be null.
+    # adUnitName : String - Unique ad unit name guaranteed not to be null.
+    # placement : String - Appodeal's placement name, guaranteed not to be null.
+    # revenue : float - The ad's revenue amount or 0 if it doesn't exist.
+    # adType : int - Appodeal ad type.
+    # adTypeString : String - Appodeal ad type as string presentation.
+    # platform : String - Appodeal platform name.
+    # currency : String - Current currency supported by Appodeal (USD) as string presentation.
+    # revenuePrecision - The revenue precision, which can be:
+    #### 1. 'exact' - programmatic revenue is the resulting price of the auction
+    #### 2. 'publisher_defined' - revenue from crosspromo campaigns
+    #### 3. 'estimated' - revenue based on ad network pricefloors or historical eCPM
+    #### 4. 'undefined' - revenue amount is not defined
+    emit_signal("adRevenueReceived", revenueInfo)
+    print("%s: ad revenue received" % name)
 
 func _interstitial_load_failed() -> void:
 	emit_signal("interstitial_load_failed")

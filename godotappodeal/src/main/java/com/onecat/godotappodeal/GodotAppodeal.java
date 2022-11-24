@@ -16,6 +16,8 @@ import com.appodeal.ads.initializing.ApdInitializationError;
 import com.appodeal.ads.UserSettings;
 import com.appodeal.ads.regulator.CCPAUserConsent;
 import com.appodeal.ads.regulator.GDPRUserConsent;
+import com.appodeal.ads.revenue.AdRevenueCallbacks;
+import com.appodeal.ads.revenue.RevenueInfo;
 import com.appodeal.ads.utils.Log;
 import com.appodeal.consent.Consent;
 import com.appodeal.consent.ConsentManager;
@@ -89,6 +91,7 @@ public class GodotAppodeal extends GodotPlugin {
         signalInfoSet.add(new SignalInfo("rewarded_video_expired"));
         // Other
         signalInfoSet.add(new SignalInfo("initialization_finished", String.class));
+        signalInfoSet.add(new SignalInfo("adRevenueReceived", Dictionary.class));
         return  signalInfoSet;
     }
 
@@ -291,7 +294,26 @@ public class GodotAppodeal extends GodotPlugin {
     public void initialize(String appId, int adTypes) {
         int types = getAdType(adTypes);
         setCallbacks(types);
+        Appodeal.setAdRevenueCallbacks(new AdRevenueCallbacks()
+           {
+               @Override
+               public void onAdRevenueReceive(RevenueInfo revenueInfo) {
+                   Dictionary godotDict = new Dictionary();
+                   godotDict.put("networkName", revenueInfo.getNetworkName());
+                   godotDict.put("demandSource", revenueInfo.getDemandSource());
+                   godotDict.put("adUnitName", revenueInfo.getAdUnitName());
+                   godotDict.put("placement", revenueInfo.getPlacement());
+                   godotDict.put("revenue", revenueInfo.getRevenue());
+                   godotDict.put("adType", revenueInfo.getAdType());
+                   godotDict.put("adTypeString", revenueInfo.getAdTypeString());
+                   godotDict.put("platform", revenueInfo.getPlatform());
+                   godotDict.put("currency", revenueInfo.getCurrency());
+                   godotDict.put("revenuePrecision", revenueInfo.getRevenuePrecision());
+                   emitSignal("adRevenueReceived", godotDict);
+               }
+           }
 
+        );
         Appodeal.initialize(
                 activity,
                 appId,
@@ -327,7 +349,14 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot //0 - none, 1 - debug, 2 - verbose
     public void setLogLevel(int level) {
-        Appodeal.setLogLevel(Log.LogLevel.fromInteger(level));
+        switch (level){
+            case 0:
+                Appodeal.setLogLevel(Log.LogLevel.none);
+            case 1:
+                Appodeal.setLogLevel(Log.LogLevel.debug);
+            case 2:
+                Appodeal.setLogLevel(Log.LogLevel.verbose);
+        }
     }
 
     @UsedByGodot
