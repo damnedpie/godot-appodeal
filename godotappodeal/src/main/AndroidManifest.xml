@@ -7,5 +7,9 @@
         <meta-data
             android:name="org.godotengine.plugin.v1.GodotAppodeal"
             android:value="com.onecat.godotappodeal.GodotAppodeal" />
+		
+		<uses-library 
+			android:name="org.apache.http.legacy"
+			android:required="false" />
     </application>
 </manifest>

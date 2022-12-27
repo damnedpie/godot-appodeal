@@ -16,6 +16,7 @@ android {
         versionCode pluginVersionCode
         versionName pluginVersionName
         multiDexEnabled true
+        useLibrary 'org.apache.http.legacy'
     }
     ndkVersion '21.4.7075529'
     libraryVariants.all { variant ->

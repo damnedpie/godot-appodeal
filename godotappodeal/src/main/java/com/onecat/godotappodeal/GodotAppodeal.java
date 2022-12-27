@@ -290,6 +290,8 @@ public class GodotAppodeal extends GodotPlugin {
         return Appodeal.isAutoCacheEnabled(getAdType(adType));
     }
 
+
+
     @UsedByGodot
     public void initialize(String appId, int adTypes) {
         int types = getAdType(adTypes);
@@ -349,14 +351,19 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot //0 - none, 1 - debug, 2 - verbose
     public void setLogLevel(int level) {
-        switch (level){
-            case 0:
-                Appodeal.setLogLevel(Log.LogLevel.none);
-            case 1:
-                Appodeal.setLogLevel(Log.LogLevel.debug);
-            case 2:
-                Appodeal.setLogLevel(Log.LogLevel.verbose);
+        if (level == 0){
+            Appodeal.setLogLevel(Log.LogLevel.none);
+            return;
         }
+        if (level == 1){
+            Appodeal.setLogLevel(Log.LogLevel.debug);
+            return;
+        }
+        if (level == 2){
+            Appodeal.setLogLevel(Log.LogLevel.verbose);
+            return;
+        }
+        Appodeal.setLogLevel(Log.LogLevel.none);
     }
 
     @UsedByGodot
@@ -385,33 +392,27 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot
     public void updateGDPRUserConsent(int consentType){
-        switch (consentType)
-        {
-            case(0):
+            if (consentType == 0){
                 Appodeal.updateGDPRUserConsent(GDPRUserConsent.Unknown);
-                break;
-            case(1):
+            }
+            if (consentType == 1) {
                 Appodeal.updateGDPRUserConsent(GDPRUserConsent.NonPersonalized);
-                break;
-            case(3):
+            }
+            if (consentType == 3) {
                 Appodeal.updateGDPRUserConsent(GDPRUserConsent.Personalized);
-                break;
-        }
+            }
     }
 
     @UsedByGodot
     public void updateCCPAUserConsent(int consentType){
-        switch (consentType)
-        {
-            case(0):
-                Appodeal.updateCCPAUserConsent(CCPAUserConsent.Unknown);
-                break;
-            case(1):
-                Appodeal.updateCCPAUserConsent(CCPAUserConsent.OptOut);
-                break;
-            case(3):
-                Appodeal.updateCCPAUserConsent(CCPAUserConsent.OptIn);
-                break;
+        if (consentType == 0){
+            Appodeal.updateCCPAUserConsent(CCPAUserConsent.Unknown);
+        }
+        if (consentType == 1) {
+            Appodeal.updateCCPAUserConsent(CCPAUserConsent.OptOut);
+        }
+        if (consentType == 3) {
+            Appodeal.updateCCPAUserConsent(CCPAUserConsent.OptIn);
         }
     }
 
