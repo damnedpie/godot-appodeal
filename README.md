@@ -80,15 +80,19 @@ binary="GodotAppodeal.3.0.1.release.aar"
 remote=[
 "com.appodeal.ads.sdk:core:3.0.1",
 "com.appodeal.ads.sdk.networks:adcolony:3.0.1.0",
-"com.appodeal.ads.sdk.networks:admob:3.0.1.0",
-"com.appodeal.ads.sdk.networks:applovin:3.0.1.0",
+"com.appodeal.ads.sdk.networks:admob:3.0.1.1",
+"com.appodeal.ads.sdk.networks:applovin:3.0.1.1",
 "com.appodeal.ads.sdk.networks:bidmachine:3.0.1.0",
 "com.appodeal.ads.sdk.networks:facebook:3.0.1.0",
-"com.appodeal.ads.sdk.networks:ironsource:3.0.1.0",
-"com.appodeal.ads.sdk.networks:my_target:3.0.1.0",
+"com.appodeal.ads.sdk.networks:ironsource:3.0.1.1",
+"com.appodeal.ads.sdk.networks:my_target:3.0.1.1",
 "com.appodeal.ads.sdk.networks:unity_ads:3.0.1.0",
 "com.appodeal.ads.sdk.networks:vungle:3.0.1.0",
 "com.appodeal.ads.sdk.networks:yandex:3.0.1.0",
+"com.appodeal.ads.sdk.networks:mraid:3.0.1.0",
+"com.appodeal.ads.sdk.networks:vast:3.0.1.0",
+"com.appodeal.ads.sdk.services:sentry_analytics:3.0.1.1",
+"com.appodeal.ads.sdk.services:stack_analytics:3.0.1.0",
 "com.appodeal.ads.sdk.services:adjust:3.0.1.0",
 "com.appodeal.ads.sdk.services:appsflyer:3.0.1.0",
 "com.appodeal.ads.sdk.services:firebase:3.0.1.0",
@@ -110,14 +114,18 @@ binary="GodotAppodeal.3.0.1.release.aar"
 remote=[
 "com.appodeal.ads.sdk:core:3.0.1",
 "com.appodeal.ads.sdk.networks:adcolony:3.0.1.0",
-"com.appodeal.ads.sdk.networks:applovin:3.0.1.0",
+"com.appodeal.ads.sdk.networks:applovin:3.0.1.1",
 "com.appodeal.ads.sdk.networks:bidmachine:3.0.1.0",
 "com.appodeal.ads.sdk.networks:facebook:3.0.1.0",
-"com.appodeal.ads.sdk.networks:ironsource:3.0.1.0",
-"com.appodeal.ads.sdk.networks:my_target:3.0.1.0",
+"com.appodeal.ads.sdk.networks:ironsource:3.0.1.1",
+"com.appodeal.ads.sdk.networks:my_target:3.0.1.1",
 "com.appodeal.ads.sdk.networks:unity_ads:3.0.1.0",
 "com.appodeal.ads.sdk.networks:vungle:3.0.1.0",
 "com.appodeal.ads.sdk.networks:yandex:3.0.1.0",
+"com.appodeal.ads.sdk.networks:mraid:3.0.1.0",
+"com.appodeal.ads.sdk.networks:vast:3.0.1.0",
+"com.appodeal.ads.sdk.services:sentry_analytics:3.0.1.1",
+"com.appodeal.ads.sdk.services:stack_analytics:3.0.1.0",
 "com.appodeal.ads.sdk.services:adjust:3.0.1.0",
 "com.appodeal.ads.sdk.services:appsflyer:3.0.1.0",
 "com.appodeal.ads.sdk.services:firebase:3.0.1.0",
@@ -168,6 +176,8 @@ enum ShowStyle {
 If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template (godot-lib.release.aar) for the engine version you are using at ``godotappodeal\libs`` folder.
 
 ## Changelog
+
+Added VAST and MRAID adapters to GDAP example (for some reason ads.sdk.core doesn't contain those adapters). Also added Sentry Analytics and Stack Analytics.
 
 Appodeal SDK 3.0.1: added AdRevenueCallback for custom project analytics. In your Godot project you can receive RevenueInfo from this callback via adRevenueReceived(revenueInfo:Dictionary) implemented in GodotAppodeal.gd
 Contents and meaning of the dictionary can be found [here](https://wiki.appodeal.com/en/android/get-started/advanced/ad-revenue-callbacks) or in GodotAppodeal.gd.
