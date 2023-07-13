@@ -1,5 +1,8 @@
-# godot-appodeal-3.x.x
+# godot-appodeal-3.0.2
 Appodeal SDK 3.0.2 Android plugin for Godot. Built on Godot 3.5.1 artifact.
+
+## Note
+This repository is not going to be updated and instead will be locked on Appodeal SDK 3.0.2. I'm planning to transfer from Java to Kotlin from SDK 3.1.3 and on and a new repo will be created once SDK 3.1.3 stable comes out. Stay tuned, they have merged video ads and static ads there, sounds dope. Eventually Appodeal SDK 3.0.2 will get completely outdated due to dependencies versions, so eventually I will archive this repo and there will only be the Kotlin repo.
 
 ## Setup
 
