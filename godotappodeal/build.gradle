@@ -1,10 +1,10 @@
 apply plugin: 'com.android.library'
 
 ext.pluginVersionCode = 1
-ext.pluginVersionName = "3.0.2"
+ext.pluginVersionName = "3.2.1"
 
 android {
-    compileSdk 32
+    compileSdk 33
     buildToolsVersion "30.0.3"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -12,7 +12,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode pluginVersionCode
         versionName pluginVersionName
         multiDexEnabled true
@@ -27,8 +27,9 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.appodeal.ads:sdk:3.0.2.+'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.appodeal.ads.sdk:core:3.2.1'
+    
     implementation 'androidx.multidex:multidex:2.0.1'
     compileOnly fileTree(dir: 'libs', includes: ['godot-lib*.aar'])
 }

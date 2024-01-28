@@ -16,12 +16,6 @@ enum ShowStyle {
   NON_SKIPPABLE_VIDEO = 16,
 }
 
-enum ConsentType {
-  UNKNOWN = 0,
-  PERSONALIZED = 3, #equal to CCPA "OptIn" status
-  NON_PERSONALIZED = 1, #equal to CCPA "OptOut" status
-}
-
 enum LogLevel {
 	NONE = 0,
 	DEBUG = 1,
@@ -126,24 +120,6 @@ func isInitializedForAdType(adType:int) -> bool:
 func setChildDirectedTreatment(enabled:bool) -> void:
 	_appodeal.setChildDirectedTreatment(enabled)
 
-#Sets GDRPUserConsent status (see ConsentType enum)
-func updateGDPRUserConsent(consentType:int) -> void:
-	_appodeal.updateGDPRUserConsent(consentType)
-
-#Sets CCPAUserConsent status (see ConsentType enum)
-func updateCCPAUserConsent(consentType:int) -> void:
-	_appodeal.updateCCPAUserConsent(consentType)
-
-#Returns a dict of current session consent status.
-func getConsentStatus() -> Dictionary:
-	return _appodeal.getConsentStatus()
-
-#Purely for testing purposes to check if your consent works as intended.
-func printConsentStatus() -> void:
-	var _dict : Dictionary = getConsentStatus()
-	for key in _dict:
-		print("%s: consent -> %s = %s" % [name, key.to_upper(), _dict[key]])
-
 #Sets autocaching for the given selected ad type.
 func setAutocache(enabled:bool, adType:int) -> void:
 	_appodeal.setAutocache(enabled, adType)
@@ -215,6 +191,10 @@ func setSegmentFilter(filter:Dictionary) -> void:
 #Returns predicted eCPM for a given ad type.
 func getPredictedEcpmForAdType(adType:int) -> float:
 	return _appodeal.getPredictedEcpmForAdType(adType)
+
+#Returns predicted eCPM for a given ad type and placement.
+func getPredictedEcpmByPlacement(adType:int, placementName:String) -> float:
+	return _appodeal.getPredictedEcpmByPlacement(adType, placementName)
 
 #Returns reward information for given placement (see Appodeal Wiki about placements).
 func getRewardForPlacement(placementName:String) -> Dictionary:
@@ -375,4 +355,3 @@ func _rewarded_video_expired() -> void:
 func _rewarded_video_clicked() -> void:
 	emit_signal("rewarded_video_clicked")
 	print("%s : rewarded_video_clicked" % name)
-

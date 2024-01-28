@@ -1,27 +1,27 @@
 package com.onecat.godotappodeal;
 
 import android.app.Activity;
-import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Map;
 
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.InterstitialCallbacks;
 import com.appodeal.ads.RewardedVideoCallbacks;
-import com.appodeal.ads.MrecCallbacks;
-import com.appodeal.ads.NativeCallbacks;
+import com.appodeal.ads.rewarded.Reward;
 import com.appodeal.ads.initializing.ApdInitializationCallback;
 import com.appodeal.ads.initializing.ApdInitializationError;
-import com.appodeal.ads.UserSettings;
-import com.appodeal.ads.regulator.CCPAUserConsent;
-import com.appodeal.ads.regulator.GDPRUserConsent;
 import com.appodeal.ads.revenue.AdRevenueCallbacks;
 import com.appodeal.ads.revenue.RevenueInfo;
 import com.appodeal.ads.utils.Log;
-import com.appodeal.consent.Consent;
-import com.appodeal.consent.ConsentManager;
-
 
 import org.godotengine.godot.Dictionary;
 import org.godotengine.godot.Godot;
@@ -29,16 +29,6 @@ import org.godotengine.godot.plugin.GodotPlugin;
 import org.godotengine.godot.plugin.SignalInfo;
 import org.godotengine.godot.plugin.UsedByGodot;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
 
 public class GodotAppodeal extends GodotPlugin {
     private Activity activity;
@@ -260,17 +250,6 @@ public class GodotAppodeal extends GodotPlugin {
     }
 
     @UsedByGodot
-    public Dictionary getConsentStatus() {
-        Consent consent = ConsentManager.getConsent();
-        Dictionary dict = new Dictionary();
-        dict.put("status", consent.getStatus().toString());
-        dict.put("zone", consent.getZone().toString());
-        dict.put("iab_consent", consent.getIABConsentString());
-        dict.put("us_privacy", consent.getUSPrivacyString());
-        return dict;
-    }
-
-    @UsedByGodot
     public void disableNetwork(String network) {
         Appodeal.disableNetwork(network);
     }
@@ -278,6 +257,11 @@ public class GodotAppodeal extends GodotPlugin {
     @UsedByGodot
     public double getPredictedEcpmForAdType(int adType) {
         return Appodeal.getPredictedEcpm(getAdType(adType));
+    }
+
+    @UsedByGodot
+    public double getPredictedEcpmByPlacement(int adType, String placementName) {
+        return Appodeal.getPredictedEcpmByPlacement(adType, placementName);
     }
 
     @UsedByGodot
@@ -391,32 +375,6 @@ public class GodotAppodeal extends GodotPlugin {
     }
 
     @UsedByGodot
-    public void updateGDPRUserConsent(int consentType){
-            if (consentType == 0){
-                Appodeal.updateGDPRUserConsent(GDPRUserConsent.Unknown);
-            }
-            if (consentType == 1) {
-                Appodeal.updateGDPRUserConsent(GDPRUserConsent.NonPersonalized);
-            }
-            if (consentType == 3) {
-                Appodeal.updateGDPRUserConsent(GDPRUserConsent.Personalized);
-            }
-    }
-
-    @UsedByGodot
-    public void updateCCPAUserConsent(int consentType){
-        if (consentType == 0){
-            Appodeal.updateCCPAUserConsent(CCPAUserConsent.Unknown);
-        }
-        if (consentType == 1) {
-            Appodeal.updateCCPAUserConsent(CCPAUserConsent.OptOut);
-        }
-        if (consentType == 3) {
-            Appodeal.updateCCPAUserConsent(CCPAUserConsent.OptIn);
-        }
-    }
-
-    @UsedByGodot
     public void logEvent(String eventName, Dictionary params){
         String[] keys = params.get_keys();
         int len = keys.length;
@@ -487,6 +445,11 @@ public class GodotAppodeal extends GodotPlugin {
     }
 
     @UsedByGodot
+    public boolean isPrecacheByPlacement(int adType, String placementName) {
+        return Appodeal.isPrecacheByPlacement(adType, placementName);
+    }
+
+    @UsedByGodot
     public void setSegmentFilter(Dictionary filter) {
         String[] keys = filter.get_keys();
         int len = keys.length;
@@ -525,10 +488,10 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot
     public Dictionary getRewardForPlacement(String placement) {
-        Pair<Double, String> reward = Appodeal.getRewardParameters(placement);
+        Reward reward = Appodeal.getReward(placement);
         Dictionary res = new Dictionary();
-        res.put("currency", reward.second);
-        res.put("amount", reward.first);
+        res.put("currency", reward.getCurrency());
+        res.put("amount", reward.getAmount());
         return res;
     }
 

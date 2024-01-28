@@ -1,8 +1,5 @@
-# godot-appodeal-3.0.2
-Appodeal SDK 3.0.2 Android plugin for Godot. Built on Godot 3.5.1 artifact.
-
-## Note
-This repository is not going to be updated and instead will be locked on Appodeal SDK 3.0.2. I'm planning to transfer from Java to Kotlin from SDK 3.1.3 and on and a new repo will be created once SDK 3.1.3 stable comes out. Stay tuned, they have merged video ads and static ads there, sounds dope. Eventually Appodeal SDK 3.0.2 will get completely outdated due to dependencies versions, so eventually I will archive this repo and there will only be the Kotlin repo.
+# godot-appodeal-3.2.1
+Appodeal SDK 3.2.1 Android plugin for Godot. Built on Godot 3.5.3 artifact.
 
 ## Setup
 
@@ -14,9 +11,13 @@ Add to ``res://android/build/build.gradle`` in ``android -> defaultConfig``:
 ```
 multiDexEnabled true
 ```
-By default, the plugin uses all Appodeal dependencies and this should be just fine for most projects. If you want to cherry-pick your ad adapters, you should use the [Get Started Wizard](https://wiki.appodeal.com/en/android-beta-3-0-0/get-started) and change the dependencies in ``GodotAppodeal.gdap``.
-
-It's recommended to follow other instructions from the Get Started page and tweak some parts of your Godot project's AndroidManifest.xml.
+In the same file, add implementation 'androidx.multidex:multidex:2.0.1' to your dependencies:
+```
+dependencies {
+    implementation libraries.kotlinStdLib
+    implementation libraries.androidxFragment
+    implementation 'androidx.multidex:multidex:2.0.1'
+```
 
 ### AD-Id permission
 
@@ -38,7 +39,7 @@ If you use AdMob, add meta-data to AndroidManifest.xml in ``<application></appli
             android:value="YOUR_ADMOB_APP_ID"/>
 ```
 
-WARNING! If you include AdMob adapter into your build (see "Customizing ad adapters" below) but you don't provide a valid AdMob App ID into your AndroidManifest, your project will crash due to AdMob's inavailability to initialize. Your logcat would have messages like this:
+WARNING! If you include AdMob adapter into your build (see "Customizing ad adapters" below) but you don't provide a valid AdMob App ID into your AndroidManifest, your project will crash due to AdMob's unavailability to initialize. Your logcat would have messages like this:
 ```
 ******************************************************************************
 * The Google Mobile Ads SDK was initialized incorrectly. AdMob publishers    *
@@ -51,93 +52,22 @@ WARNING! If you include AdMob adapter into your build (see "Customizing ad adapt
 ```
 
 How to fix it:
-- Solution #1: Disable the AdMob adapter
-- Solution #2: Provide a valid (or [testing](https://developers.google.com/admob/android/quick-start#import_the_mobile_ads_sdk)) Admob app ID.
 
-### Customizing ad adapters
+Solution #1: Disable the all adapters that require Admob app ID.
 
-You can customize what ad network adapters and services are going to be included into your game via editing GodotAppodeal.gdap settings file. By default, the plugin will use all Appodeal adapters and dependencies:
+In order to do that:
+1. Open the GDAP file of the plugin and leave empty braces in the "remote" property (so it would look like remote=[])
+2. Open the build.gradle file and inside your dependencies list add the following:
 ```
-[config]
-
-name="GodotAppodeal"
-binary_type="local"
-binary="GodotAppodeal.3.0.2.release.aar"
-
-[dependencies]
-
-remote=["com.appodeal.ads:sdk:3.0.2.+"]
-custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
+    implementation ('com.appodeal.ads:sdk:3.2.1.+') {
+        exclude group: 'com.appodeal.ads.sdk.networks', module: 'admob' // Uses Google Ads ID
+        exclude group: 'com.appodeal.ads.sdk.networks', module: 'bidmachine' // Uses Google Ads ID
+        exclude group: 'com.appodeal.ads.sdk.networks', module: 'bigo_ads' // Uses Google Ads ID
+        exclude group: 'com.appodeal.ads.sdk.networks', module: 'bidon' // Uses Google Ads ID
+    }
 ```
 
-This is equal to the following:
-```
-[config]
-
-name="GodotAppodeal"
-binary_type="local"
-binary="GodotAppodeal.3.0.2.release.aar"
-
-[dependencies]
-
-remote=[
-"com.appodeal.ads.sdk:core:3.0.2",
-"com.appodeal.ads.sdk.networks:adcolony:3.0.2.0",
-"com.appodeal.ads.sdk.networks:admob:3.0.2.0",
-"com.appodeal.ads.sdk.networks:applovin:3.0.2.0",
-"com.appodeal.ads.sdk.networks:bidmachine:3.0.2.0",
-"com.appodeal.ads.sdk.networks:facebook:3.0.2.0",
-"com.appodeal.ads.sdk.networks:ironsource:3.0.2.0",
-"com.appodeal.ads.sdk.networks:my_target:3.0.2.0",
-"com.appodeal.ads.sdk.networks:unity_ads:3.0.2.0",
-"com.appodeal.ads.sdk.networks:vungle:3.0.2.0",
-"com.appodeal.ads.sdk.networks:yandex:3.0.2.0",
-"com.appodeal.ads.sdk.networks:mraid:3.0.2.0",
-"com.appodeal.ads.sdk.networks:vast:3.0.2.0",
-"com.appodeal.ads.sdk.services:sentry_analytics:3.0.2.0",
-"com.appodeal.ads.sdk.services:stack_analytics:3.0.2.0",
-"com.appodeal.ads.sdk.services:adjust:3.0.2.0",
-"com.appodeal.ads.sdk.services:appsflyer:3.0.2.0",
-"com.appodeal.ads.sdk.services:firebase:3.0.2.0",
-"com.appodeal.ads.sdk.services:facebook_analytics:3.0.2.0",
-]
-custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
-```
-
-In order to remove an adapter or service from the plugin, simply delete the line responsible for it from the above. Here is an example of how to remove AdMob network:
-```
-[config]
-
-name="GodotAppodeal"
-binary_type="local"
-binary="GodotAppodeal.3.0.2.release.aar"
-
-[dependencies]
-
-remote=[
-"com.appodeal.ads.sdk:core:3.0.2",
-"com.appodeal.ads.sdk.networks:adcolony:3.0.2.0",
-"com.appodeal.ads.sdk.networks:applovin:3.0.2.0",
-"com.appodeal.ads.sdk.networks:bidmachine:3.0.2.0",
-"com.appodeal.ads.sdk.networks:facebook:3.0.2.0",
-"com.appodeal.ads.sdk.networks:ironsource:3.0.2.0",
-"com.appodeal.ads.sdk.networks:my_target:3.0.2.0",
-"com.appodeal.ads.sdk.networks:unity_ads:3.0.2.0",
-"com.appodeal.ads.sdk.networks:vungle:3.0.2.0",
-"com.appodeal.ads.sdk.networks:yandex:3.0.2.0",
-"com.appodeal.ads.sdk.networks:mraid:3.0.2.0",
-"com.appodeal.ads.sdk.networks:vast:3.0.2.0",
-"com.appodeal.ads.sdk.services:sentry_analytics:3.0.2.0",
-"com.appodeal.ads.sdk.services:stack_analytics:3.0.2.0",
-"com.appodeal.ads.sdk.services:adjust:3.0.2.0",
-"com.appodeal.ads.sdk.services:appsflyer:3.0.2.0",
-"com.appodeal.ads.sdk.services:firebase:3.0.2.0",
-"com.appodeal.ads.sdk.services:facebook_analytics:3.0.2.0",
-]
-custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
-```
-
-The entire Appodeal SDK dependencies content can be found [here](https://wiki.appodeal.com/en/android/get-started/advanced/sdk-content). Make sure to keep it up to date if you customize your adapters list.
+Solution #2: Provide a valid (or [testing](https://developers.google.com/admob/android/quick-start#import_the_mobile_ads_sdk)) Admob app ID.
 
 ## Usage
 
@@ -145,7 +75,7 @@ Add the GodotAppodeal.gd as an Autoload to your project and use it's methods, th
 
 ### Initialization
 
-Appodeal has to be initialized via initialize(appKey, adTypes) method. If you don't provide CCPA/GDPR consent status before calling initialize(), Appodeal SDK will summon their Consent Manager when required.
+Appodeal has to be initialized via initialize(appKey, adTypes) method.
 
 ### Ad Types
 
@@ -179,6 +109,8 @@ enum ShowStyle {
 If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template (godot-lib.release.aar) for the engine version you are using at ``godotappodeal\libs`` folder.
 
 ## Changelog
+Appodeal SDK 3.2.1: removed deprecated methods from both the bridge and the .gd script
+
 Appodeal SDK 3.0.2: updated dependencies, bumped compileSdk to level 32
 
 
