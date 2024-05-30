@@ -1,5 +1,5 @@
-# godot-appodeal-3.2.1
-Appodeal SDK 3.2.1 Android plugin for Godot. Built on Godot 3.5.3 artifact.
+# godot-appodeal-3.3.0
+Appodeal SDK 3.3.0 Android plugin for Godot. Built on Godot 3.5.3 artifact.
 
 ## Setup
 
