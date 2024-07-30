@@ -16,11 +16,14 @@ import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.InterstitialCallbacks;
 import com.appodeal.ads.RewardedVideoCallbacks;
+import com.appodeal.ads.inapp.InAppPurchase;
+import com.appodeal.ads.inapp.InAppPurchaseValidateCallback;
 import com.appodeal.ads.rewarded.Reward;
 import com.appodeal.ads.initializing.ApdInitializationCallback;
 import com.appodeal.ads.initializing.ApdInitializationError;
 import com.appodeal.ads.revenue.AdRevenueCallbacks;
 import com.appodeal.ads.revenue.RevenueInfo;
+import com.appodeal.ads.service.ServiceError;
 import com.appodeal.ads.utils.Log;
 
 import org.godotengine.godot.Dictionary;
@@ -81,7 +84,9 @@ public class GodotAppodeal extends GodotPlugin {
         signalInfoSet.add(new SignalInfo("rewarded_video_expired"));
         // Other
         signalInfoSet.add(new SignalInfo("initialization_finished", String.class));
-        signalInfoSet.add(new SignalInfo("adRevenueReceived", Dictionary.class));
+        signalInfoSet.add(new SignalInfo("ad_revenue_received", Dictionary.class));
+        signalInfoSet.add(new SignalInfo("iap_validate_success", String.class));
+        signalInfoSet.add(new SignalInfo("iap_validate_failed", String.class));
         return  signalInfoSet;
     }
 
@@ -295,7 +300,7 @@ public class GodotAppodeal extends GodotPlugin {
                    godotDict.put("platform", revenueInfo.getPlatform());
                    godotDict.put("currency", revenueInfo.getCurrency());
                    godotDict.put("revenuePrecision", revenueInfo.getRevenuePrecision());
-                   emitSignal("adRevenueReceived", godotDict);
+                   emitSignal("ad_revenue_received", godotDict);
                }
            }
 
@@ -315,7 +320,7 @@ public class GodotAppodeal extends GodotPlugin {
                                     message += e.getMessage();
                                 }
                             }
-                            if (message == ""){
+                            if (message.equals("")){
                                 message = "Initialization OK!";
                             }
                             emitSignal("initialization_finished", message);
@@ -503,5 +508,85 @@ public class GodotAppodeal extends GodotPlugin {
     @UsedByGodot
     public void trackInAppPurchase(double amount, String currencyCode) {
         Appodeal.trackInAppPurchase(activity.getApplicationContext(), amount, currencyCode);
+    }
+
+    @UsedByGodot
+    public void validatePurchase(Dictionary purchaseDetails) {
+        // Check if the dictionary is valid
+        String[] requiredKeys = {
+                "inappType",
+                "publicKey",
+                "signature",
+                "purchaseData",
+                "purchaseToken",
+                "purchaseTimestamp",
+                "developerPayload",
+                "orderId",
+                "sku",
+                "price",
+                "currency",
+                //"additionalParams"
+        };
+        for(int i = 0; i < requiredKeys.length; i++) {
+            if(purchaseDetails.get(requiredKeys[i]) == null){
+                return;
+            }
+        }
+
+        // Check whether this is a subscription
+        InAppPurchase.Type inappType = InAppPurchase.Type.InApp;
+        if (purchaseDetails.get("inappType") == "subscription"){
+            inappType = InAppPurchase.Type.Subs;
+        }
+
+        // Convert Godot "additionalParams" dictionary into a Map
+        Map <String, String> additionalParams = new HashMap<>();
+        if (purchaseDetails.get("additionalParams") != null){
+            Dictionary additionalParamsDict = (Dictionary) purchaseDetails.get("additionalParams");
+            String[] paramKeys = additionalParamsDict.get_keys();
+            for(int i = 0; i < paramKeys.length; i++) {
+                additionalParams.put(paramKeys[i], (String)additionalParamsDict.get(paramKeys[i]));
+            }
+        }
+
+        // Create new InAppPurchase
+        InAppPurchase inAppPurchase = InAppPurchase.newBuilder(inappType)
+                .withPublicKey((String) purchaseDetails.get("publicKey"))
+                .withSignature((String) purchaseDetails.get("signature"))
+                .withPurchaseData((String) purchaseDetails.get("purchaseData"))
+                .withPurchaseToken((String) purchaseDetails.get("purchaseToken"))
+                .withPurchaseTimestamp(((Number)purchaseDetails.get("purchaseTimestamp")).longValue())
+                .withDeveloperPayload((String) purchaseDetails.get("developerPayload"))
+                .withOrderId((String) purchaseDetails.get("orderId"))
+                .withSku((String) purchaseDetails.get("sku")) // Stock keeping unit id from Google API
+                .withPrice((String) purchaseDetails.get("price")) // Price from Stock keeping unit
+                .withCurrency((String) purchaseDetails.get("currency")) // Currency from Stock keeping unit
+                .withAdditionalParams(additionalParams) // Appodeal In-app event if needed
+                .build();
+        // Validate InApp purchase
+        Appodeal.validateInAppPurchase(activity, inAppPurchase, new InAppPurchaseValidateCallback() {
+            @Override
+            public void onInAppPurchaseValidateSuccess(@NonNull InAppPurchase purchase, @Nullable List<ServiceError> errors) {
+                // In-App purchase validation was validated successfully by at least one connected service
+                String signalMessage = "";
+                if (errors != null){
+                    signalMessage += String.format("%s validated successfully", purchase.getOrderId());
+                    for(int i = 0; i < errors.size(); i++){
+                        signalMessage += String.format("\n%s : %s", errors.get(i).getComponentName(), errors.get(i).getDescription());
+                    }
+                }
+                emitSignal("iap_validate_success", signalMessage);
+            }
+            @Override
+            public void onInAppPurchaseValidateFail(@NonNull InAppPurchase purchase, @NonNull List<ServiceError> errors) {
+                // In-App purchase validation was failed by all connected service
+                String signalMessage = "";
+                signalMessage += String.format("%s failed to validate", purchase.getOrderId());
+                for(int i = 0; i < errors.size(); i++) {
+                        signalMessage += String.format("\n%s : %s", errors.get(i).getComponentName(), errors.get(i).getDescription());
+                }
+                emitSignal("iap_validate_failed", signalMessage);
+            }
+        });
     }
 }

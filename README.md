@@ -39,7 +39,7 @@ If you use AdMob, add meta-data to AndroidManifest.xml in ``<application></appli
             android:value="YOUR_ADMOB_APP_ID"/>
 ```
 
-WARNING! If you include AdMob adapter into your build (see "Customizing ad adapters" below) but you don't provide a valid AdMob App ID into your AndroidManifest, your project will crash due to AdMob's unavailability to initialize. Your logcat would have messages like this:
+If you don't provide AdMob App ID, the SDK will crash with the following in your logcat:
 ```
 ******************************************************************************
 * The Google Mobile Ads SDK was initialized incorrectly. AdMob publishers    *
@@ -51,23 +51,9 @@ WARNING! If you include AdMob adapter into your build (see "Customizing ad adapt
 ******************************************************************************
 ```
 
-How to fix it:
+In the past, it was possible to disable some ad network adapters that used AdMob in case you didn't have a valid ID. Now, however, it's basically pointless, because you'd have to disable almost all adapters rendering the integration useless.
 
-Solution #1: Disable the all adapters that require Admob app ID.
-
-In order to do that:
-1. Open the GDAP file of the plugin and leave empty braces in the "remote" property (so it would look like remote=[])
-2. Open the build.gradle file and inside your dependencies list add the following:
-```
-    implementation ('com.appodeal.ads:sdk:3.2.1.+') {
-        exclude group: 'com.appodeal.ads.sdk.networks', module: 'admob' // Uses Google Ads ID
-        exclude group: 'com.appodeal.ads.sdk.networks', module: 'bidmachine' // Uses Google Ads ID
-        exclude group: 'com.appodeal.ads.sdk.networks', module: 'bigo_ads' // Uses Google Ads ID
-        exclude group: 'com.appodeal.ads.sdk.networks', module: 'bidon' // Uses Google Ads ID
-    }
-```
-
-Solution #2: Provide a valid (or [testing](https://developers.google.com/admob/android/quick-start#import_the_mobile_ads_sdk)) Admob app ID.
+Now the only solution to this is providing an ID. If you don't have an AdMob account, you can (at least for testing) use a test ID, like demonstrated [here](https://developers.google.com/admob/android/quick-start#import_the_mobile_ads_sdk). I don't know how safe is it to use in production though.
 
 ## Usage
 
@@ -104,17 +90,38 @@ enum ShowStyle {
 }
 ```
 
+### Advanced IAP reporting
+
+If you need to use the advanced IAP logging and validation mechanism (details [here](https://docs.appodeal.com/android/advanced/in-app-purchases)), this plugin has a method to do it. Please note, however, that the official Godot Google Play Billing plugin's returned Purchase dictionary lacks a property that is required by Appodeal and the MMPs that the IAPs are reported to. In order to fix this, go to [this class](https://github.com/godotengine/godot-google-play-billing/blob/master/godot-google-play-billing/src/main/java/org/godotengine/godot/plugin/googleplaybilling/utils/GooglePlayBillingUtils.java) of the Billing plugin and change this method to look like this, then build the plugin:
+
+```java
+public class GooglePlayBillingUtils {
+    public static Dictionary convertPurchaseToDictionary(Purchase purchase) {
+        Dictionary dictionary = new Dictionary();
+        dictionary.put("original_json", purchase.getOriginalJson());
+        dictionary.put("order_id", purchase.getOrderId());
+        dictionary.put("package_name", purchase.getPackageName());
+        dictionary.put("purchase_state", purchase.getPurchaseState());
+        dictionary.put("purchase_time", purchase.getPurchaseTime());
+        dictionary.put("purchase_token", purchase.getPurchaseToken());
+        dictionary.put("quantity", purchase.getQuantity());
+        dictionary.put("signature", purchase.getSignature());
+        dictionary.put("developer_payload", purchase.getDeveloperPayload()); // Add this!
+        ArrayList<String> skus = purchase.getSkus();
+        dictionary.put("sku", skus.get(0));
+        String[] skusArray = skus.toArray(new String[0]);
+        dictionary.put("skus", skusArray);
+        dictionary.put("is_acknowledged", purchase.isAcknowledged());
+        dictionary.put("is_auto_renewing", purchase.isAutoRenewing());
+        return dictionary;
+    }
+    // The rest of the class remains intact
+}
+```
+
+Now you should be good to go and use the validateIAP() method in the GodotAppodeal.gd; the method is commented with instrucions on how to form the dictionary that will get passed into Appodeal SDK, so make sure you read it. Just grab all the required data from GodotGooglePlayBilling's returned Purchase dictionary (which you get in the "purchases_updated" callback of the Billing plugin) and pass it through Appodeal plugin's validateIAP() method.
+
 ## Building
 
 If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template (godot-lib.release.aar) for the engine version you are using at ``godotappodeal\libs`` folder.
 
-## Changelog
-Appodeal SDK 3.2.1: removed deprecated methods from both the bridge and the .gd script
-
-Appodeal SDK 3.0.2: updated dependencies, bumped compileSdk to level 32
-
-
-Added VAST and MRAID adapters to GDAP example (for some reason ads.sdk.core doesn't contain those adapters). Also added Sentry Analytics and Stack Analytics.
-
-Appodeal SDK 3.0.1: added AdRevenueCallback for custom project analytics. In your Godot project you can receive RevenueInfo from this callback via adRevenueReceived(revenueInfo:Dictionary) implemented in GodotAppodeal.gd
-Contents and meaning of the dictionary can be found [here](https://wiki.appodeal.com/en/android/get-started/advanced/ad-revenue-callbacks) or in GodotAppodeal.gd.

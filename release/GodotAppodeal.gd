@@ -43,7 +43,9 @@ signal rewarded_video_finished(amount, currency)
 signal rewarded_video_closed(finished)
 signal rewarded_video_expired()
 signal initialization_finished(message_string)
-signal adRevenueReceived(revenueInfo)
+signal ad_revenue_received(revenueInfo)
+signal iap_validate_success(message)
+signal iap_validate_failed(message)
 
 var _appodeal : JNISingleton = null
 
@@ -61,7 +63,7 @@ func _ready() -> void:
 
 		#It's easier to autocache ads rather than to cache them manually, however this might cause
 		#performance issues if the ads will have to cache during the gameplay. Also autocaching tends
-		#to damage your fillrate and display rate drastically when it comes to ads other than banners,
+		#to hurt your fillrate and display rate drastically when it comes to ads other than banners,
 		#so you should probably consider manual caching instead.
 
 		setAutocache(true, AdType.INTERSTITIAL)
@@ -87,7 +89,7 @@ func _ready() -> void:
 	else:
 		print("%s : Appodeal singletone not found" % name)
 
-#A working example of how you can show an interstitial ad.
+#An example of how you can show an interstitial ad.
 func showInterstitial() -> void:
 	if !_appodeal:
 		return
@@ -97,7 +99,7 @@ func showInterstitial() -> void:
 	else:
 		print("%s : can't show interstitial, skipping" % name)
 
-#A working example of how you can show a rewarded ad.
+#An example of how you can show a rewarded ad.
 func showRewardedAd() -> void:
 	if !_appodeal:
 		return
@@ -216,6 +218,24 @@ func logEvent(eventName:String, parameters:Dictionary) -> void:
 func trackIAP(amount:float, currencyCode:String) -> void:
 	_appodeal.trackInAppPurchase(amount, currencyCode)
 
+#Advanced IAP tracking, see https://docs.appodeal.com/android/advanced/in-app-purchases
+# The dictionary MUST have all these keys, otherwise validateIAP will do nothing:
+#	"inappType" - String, must be equal to "subscription" if the IAP is a subscription
+#	"publicKey" - String, see https://support.google.com/googleplay/android-developer/answer/186113
+#	"signature" - String
+#	"purchaseData" - String
+#	"purchaseToken" - String
+#	"purchaseTimestamp" - int (long)
+#	"developerPayload" - String
+#	"orderId" - String
+#	"sku" - String
+#	"price" - String
+#	"currency" - String
+# You can specify additional params as a dictionary of Strings like this:
+#	"additionalParams" - a Dict of Strings
+func validateIAP(purchaseDetails:Dictionary) -> void:
+	_appodeal.validatePurchase(purchaseDetails)
+
 #Mute videoads if call volume is muted. AFAIK this is an Android-only feature.
 func muteVideosIfCallsMuted(mute:bool) -> void:
 	_appodeal.muteVideosIfCallsMuted(mute)
@@ -245,8 +265,9 @@ func connectSignals() -> void:
 	_appodeal.connect("rewarded_video_closed", self, "_rewarded_video_closed") #Emitted when rewarded ad was closed (the usual scenario when the gameplay continues)
 	_appodeal.connect("rewarded_video_expired", self, "_rewarded_video_expired") #Emitted when cached rewarded ad has expired and needs recache
 
-	_appodeal.connect("adRevenueReceived", self, "_adRevenueReceived") #Emitted when ad revenue has been received
-
+	_appodeal.connect("ad_revenue_received", self, "_ad_revenue_received") #Emitted when ad revenue has been received
+	_appodeal.connect("iap_validate_success", self, "_iap_validate_success") #Emitted when an IAP has successfully been validated via validateIAP()
+	_appodeal.connect("iap_validate_failed", self, "_iap_validate_failed") #Emitted when ad IAP has failed to validate via validateIAP()
 
 
 #---------------#
@@ -257,7 +278,7 @@ func _initialization_finished(message_string) -> void:
 	emit_signal("initialization_finished", message_string)
 	print("%s: initialization finished with message: %s" % [name, message_string])
 
-func _adRevenueReceived(revenueInfo:Dictionary) -> void:
+func _ad_revenue_received(revenueInfo:Dictionary) -> void:
     #Dictionary contents will be as follows:
     # networkName : String - The name of the ad network, guaranteed not to be null.
     # demandSource : String - The demand source name and bidder name in case of impression from real-time bidding, guaranteed not to be null.
@@ -273,7 +294,7 @@ func _adRevenueReceived(revenueInfo:Dictionary) -> void:
     #### 2. 'publisher_defined' - revenue from crosspromo campaigns
     #### 3. 'estimated' - revenue based on ad network pricefloors or historical eCPM
     #### 4. 'undefined' - revenue amount is not defined
-    emit_signal("adRevenueReceived", revenueInfo)
+    emit_signal("ad_revenue_received", revenueInfo)
     print("%s: ad revenue received" % name)
 
 func _interstitial_load_failed() -> void:
@@ -355,3 +376,11 @@ func _rewarded_video_expired() -> void:
 func _rewarded_video_clicked() -> void:
 	emit_signal("rewarded_video_clicked")
 	print("%s : rewarded_video_clicked" % name)
+
+func _iap_validate_success(message:String) -> void:
+	emit_signal("iap_validate_success", message)
+	print("%s : iap_validate_success" % name)
+
+func _iap_validate_failed(message:String) -> void:
+	emit_signal("iap_validate_failed", message)
+	print("%s : iap_validate_failed" % name)
