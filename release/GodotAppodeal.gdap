@@ -2,9 +2,9 @@
 
 name="GodotAppodeal"
 binary_type="local"
-binary="GodotAppodeal.3.3.1.release.aar"
+binary="GodotAppodeal.3.3.2.release.aar"
 
 [dependencies]
 
-remote=["com.appodeal.ads:sdk:3.3.1.+"]
+remote=["com.appodeal.ads:sdk:3.3.2.+"]
 custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
