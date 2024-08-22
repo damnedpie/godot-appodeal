@@ -28,7 +28,8 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.appodeal.ads.sdk:core:3.3.2'
+    implementation 'com.appodeal.ads:sdk:3.3.2.0'
+    implementation 'com.bigossp:max-mediation:4.8.2.0'
     
     implementation 'androidx.multidex:multidex:2.0.1'
     compileOnly fileTree(dir: 'libs', includes: ['godot-lib*.aar'])

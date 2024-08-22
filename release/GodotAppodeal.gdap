@@ -6,5 +6,5 @@ binary="GodotAppodeal.3.3.2.release.aar"
 
 [dependencies]
 
-remote=["com.appodeal.ads:sdk:3.3.2.+"]
+remote=["com.appodeal.ads:sdk:3.3.2.0", "com.bigossp:max-mediation:4.8.2.0"]
 custom_maven_repos=["https://artifactory.appodeal.com/appodeal"]
