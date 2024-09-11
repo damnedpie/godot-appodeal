@@ -1,27 +1,35 @@
-# godot-appodeal-3.3.2
-Appodeal SDK 3.3.2 Android plugin for Godot. Built on Godot 3.5.3 artifact.
+# Godot Appodeal 3.3.2
+[![Godot](https://img.shields.io/badge/Godot%20Engine-3.6-blue?style=for-the-badge&logo=godotengine&logoSize=auto)
+](https://godotengine.org/)
+[![Appodeal](https://img.shields.io/badge/Appodeal_3.3.2-red?style=for-the-badge&logoSize=auto)
+](https://appodeal.com/)
+![GitHub License](https://img.shields.io/github/license/damnedpie/godot-appodeal?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/damnedpie/godot-appodeal?style=for-the-badge&logo=github&logoSize=auto&color=%23FFD700)
+
+Appodeal SDK 3.3.2 Android plugin for Godot. Built on Godot 3.6 AAR.
 
 ## Setup
 
-Grab the``GodotAppodeal`` plugin binary (.aar) and config (.gdap) from the releases page and put both into res://android/plugins. For easy start, you can also use my GodotAppodeal.gd script (it's very well documented).
+### Project integration
 
-Make sure to open your Godot project, go to Project -> Settings and add a new "Appodeal/AppKey" property (String). Store your Appodeal AppKey inside this property and reference it via ProjectSettings.get_setting("Appodeal/AppKey").
+Grab the``GodotAppodeal`` plugin binary (.aar) and config (.gdap) from the releases page and put both into ``res://android/plugins``. For easy start, you can also use my ``GodotAppodeal.gd`` script (it's very well documented).
+
+Make sure to open your Godot project, go to Project -> Settings and add a new ``"Appodeal/AppKey" property (String)``. Store your Appodeal AppKey inside this property and reference it via ``ProjectSettings.get_setting("Appodeal/AppKey")``.
 
 Add to ``res://android/build/build.gradle`` in ``android -> defaultConfig``:
-```
+```groovy
 multiDexEnabled true
 ```
 In the same file, add implementation 'androidx.multidex:multidex:2.0.1' to your dependencies:
-```
+```groovy
 dependencies {
-    implementation libraries.kotlinStdLib
-    implementation libraries.androidxFragment
+    implementation "androidx.fragment:fragment:$versions.fragmentVersion"
     implementation 'androidx.multidex:multidex:2.0.1'
 ```
 
-### AD-Id permission
+### AD-ID permission
 
-It's mandatory to have the com.google.android.gms.ads.APPLICATION_ID permission in your AndroidManifest.xml for ad networks to obtain the AdID of the device. Without this permission advertising SDKs can't operate and will cause crashes, so add the following permission to your project's AndroidManifest.xml:
+It's mandatory to have the ``com.google.android.gms.ads.AD_ID`` permission in your ``AndroidManifest.xml`` for ad networks to obtain the AdID of the device. Without this permission advertising SDKs can't operate and will cause crashes, so add the following permission to your project's ``AndroidManifest.xml``:
 
 ```xml
 <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
@@ -31,7 +39,7 @@ Make sure to add it between `<!--CHUNK_USER_PERMISSIONS_BEGIN-->` and `<!--CHUNK
 
 ### AdMob
 
-If you use AdMob, add meta-data to AndroidManifest.xml in ``<application></application>``:
+If you use AdMob, add meta-data to ``AndroidManifest.xml`` in ``<application></application>``:
 ```xml
 <!-- AdMob -->
         <meta-data
@@ -57,36 +65,42 @@ Now the only solution to this is providing an ID. If you don't have an AdMob acc
 
 ## Usage
 
-Add the GodotAppodeal.gd as an Autoload to your project and use it's methods, they are all well commented.
+Add the ``GodotAppodeal.gd`` as an Autoload to your project and use its methods, they are all well commented.
 
 ### Initialization
 
-Appodeal has to be initialized via initialize(appKey, adTypes) method.
+Appodeal has to be initialized via ``initialize(appKey, adTypes)`` method.
 
 ### Ad Types
 
-The adTypes parameter in the code is responsible for the ad formats you are going to implement into your app. An enum is defined in GodotAppodeal.gd for those.
+The adTypes parameter in the code is responsible for the ad formats you are going to implement into your app. An enum is defined in ``GodotAppodeal.gd`` for those.
 ```gdscript
+# These flags are used for initialization and can be combined with | operator
 enum AdType {
-  INTERSTITIAL = 1,
-  BANNER = 2,
-  NATIVE = 4,
-  REWARDED_VIDEO = 8,
-  NON_SKIPPABLE_VIDEO = 16,
+	NONE = 0, # 0b0000_0000_0000
+	INTERSTITIAL = 3, # 0b0000_0000_0011
+	BANNER = 4, # 0b0000_0000_0100
+	REWARDED_VIDEO = 128, #0b0000_1000_0000
+	NATIVE = 512, # 0b0010_0000_0000 not implemented in the plugin
+	MREC = 256, # 0b0001_0000_0000
 }
 ```
-Ad types can be combined using "|" operator, e.g. initialize(appKey, AdType.INTERSTITIAL | AdType.REWARDED_VIDEO).
+Ad types can be combined using "|" operator like this: ``initialize(appKey, AdType.INTERSTITIAL | AdType.REWARDED_VIDEO)``.
 
 ### Show Styles
 
-The showStyles parameter use for show ad. An enum is defined in GodotAppodeal.gd for those.
+The showStyle parameter is responsible for the form in which the ad will be served. An enum is defined in ``GodotAppodeal.gd`` for those.
 ```gdscript
 enum ShowStyle {
-  INTERSTITIAL = 1,
-  BANNER_TOP = 2,
-  BANNER_BOTTOM = 4,
-  REWARDED_VIDEO = 8,
-  NON_SKIPPABLE_VIDEO = 16,
+	INTERSTITIAL = 3, # 0b0000_0000_0011
+	BANNER_BOTTOM = 8, # 0b0000_0000_1000
+	BANNER_TOP = 16, # 0b0000_0001_0000
+	BANNER_LEFT = 1024, # 0b0100_0000_0000
+	BANNER_RIGHT = 2048, # 0b1000_0000_0000
+	BANNER_VIEW = 64, # 0b0000_0100_0000 im not sure what this is so it's not implemented
+	REWARDED_VIDEO = 128, # 0b0000_1000_0000
+	MREC = 256, # 0b0001_0000_0000
+	NATIVE = 512, # 0b0010_0000_0000 not implemented in the plugin
 }
 ```
 
@@ -119,9 +133,17 @@ public class GooglePlayBillingUtils {
 }
 ```
 
-Now you should be good to go and use the validateIAP() method in the GodotAppodeal.gd; the method is commented with instrucions on how to form the dictionary that will get passed into Appodeal SDK, so make sure you read it. Just grab all the required data from GodotGooglePlayBilling's returned Purchase dictionary (which you get in the "purchases_updated" callback of the Billing plugin) and pass it through Appodeal plugin's validateIAP() method.
+Now you should be good to go and use the ``validateIAP()`` method in the ``GodotAppodeal.gd``; the method is commented with instructions on how to form the dictionary that will get passed into Appodeal SDK, so make sure you read it. Just grab all the required data from GodotGooglePlayBilling's returned ``Purchase`` dictionary (which you get in the ``purchases_updated`` callback of the Billing plugin) and pass it through Appodeal plugin's ``validateIAP()`` method.
+
+### MREC banners
+
+Note: I haven't used MREC ads in my production games as of yet. I only tested MRECs with testing mode enabled in SDK settings.
+
+In order to use MRECs, you need to initialize the SDK with ``AdType.MREC`` flag. Then, you need to call ``createLayoutForMREC()`` to get the layout for displaying MRECs created. You should only do this once per app run.
+
+Just like with plain banners, it's best to use autocaching with MRECs. To show a MREC, simply call ``showAd(ShowStyle.MREC)``. You can hide MRECs by calling ``hideMREC()``.
 
 ## Building
 
-If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template (godot-lib.release.aar) for the engine version you are using at ``godotappodeal\libs`` folder.
+If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template ``(godot-lib.release.aar)`` for the engine version you are using at ``godotappodeal\libs`` folder.
 
