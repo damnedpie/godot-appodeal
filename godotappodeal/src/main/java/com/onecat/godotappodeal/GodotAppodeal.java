@@ -412,12 +412,22 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot
     public void showAd(int style) {
-        Appodeal.show(activity, getShowStyle(style));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Appodeal.show(activity, getShowStyle(style));
+            }
+        });
     }
 
     @UsedByGodot
     public void showAdForPlacement(int style, String placementName) {
-        Appodeal.show(activity, getShowStyle(style), placementName);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Appodeal.show(activity, getShowStyle(style), placementName);
+            }
+        });
     }
 
     @UsedByGodot
@@ -464,7 +474,12 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot
     public void hideBanner() {
-        Appodeal.hide(activity, Appodeal.BANNER);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Appodeal.hide(activity, Appodeal.BANNER);
+            }
+        });
     }
 
     @UsedByGodot
@@ -493,7 +508,12 @@ public class GodotAppodeal extends GodotPlugin {
 
     @UsedByGodot
     public void hideMREC() {
-        Appodeal.hide(activity, Appodeal.MREC);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Appodeal.hide(activity, Appodeal.MREC);
+            }
+        });
     }
 
     @UsedByGodot
