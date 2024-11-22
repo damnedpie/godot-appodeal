@@ -1,10 +1,10 @@
-# Godot Appodeal 3.3.3
+# Godot Appodeal 3.4.0
 [![Godot](https://img.shields.io/badge/Godot%20Engine-3.6-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
-[![Appodeal](https://img.shields.io/badge/Appodeal_3.3.3-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
+[![Appodeal](https://img.shields.io/badge/Appodeal_3.4.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
 [![GitHub License](https://img.shields.io/github/license/damnedpie/godot-appodeal?style=for-the-badge)](#)
 [![GitHub Repo stars](https://img.shields.io/github/stars/damnedpie/godot-appodeal?style=for-the-badge&logo=github&logoSize=auto&color=%23FFD700)](#)
 
-Appodeal SDK 3.3.3 Android plugin for Godot. Built on Godot 3.6 AAR.
+Appodeal SDK 3.4.0 Android plugin for Godot. Built on Godot 3.6 AAR.
 
 ## Setup
 
@@ -13,17 +13,6 @@ Appodeal SDK 3.3.3 Android plugin for Godot. Built on Godot 3.6 AAR.
 Grab the``GodotAppodeal`` plugin binary (.aar) and config (.gdap) from the releases page and put both into ``res://android/plugins``. For easy start, you can also use my ``GodotAppodeal.gd`` script (it's very well documented).
 
 Make sure to open your Godot project, go to Project -> Settings and add a new ``"Appodeal/AppKey" property (String)``. Store your Appodeal AppKey inside this property and reference it via ``ProjectSettings.get_setting("Appodeal/AppKey")``.
-
-Add to ``res://android/build/build.gradle`` in ``android -> defaultConfig``:
-```groovy
-multiDexEnabled true
-```
-In the same file, add implementation 'androidx.multidex:multidex:2.0.1' to your dependencies:
-```groovy
-dependencies {
-    implementation "androidx.fragment:fragment:$versions.fragmentVersion"
-    implementation 'androidx.multidex:multidex:2.0.1'
-```
 
 ### AD-ID permission
 
