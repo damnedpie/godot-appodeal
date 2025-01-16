@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 ext.pluginVersionCode = 1
-ext.pluginVersionName = "3.4.0"
+ext.pluginVersionName = "3.4.1"
 
 android {
     compileSdk 34
@@ -16,6 +16,12 @@ android {
         versionCode pluginVersionCode
         versionName pluginVersionName
     }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
     ndkVersion '23.2.8568313'
     libraryVariants.configureEach { variant ->
         variant.outputs.all { output ->
@@ -26,7 +32,7 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.appodeal.ads:sdk:3.4.0.0'
+    implementation 'com.appodeal.ads:sdk:3.4.1.0'
     compileOnly fileTree(dir: 'libs', includes: ['godot-lib*.aar'])
 }
 
