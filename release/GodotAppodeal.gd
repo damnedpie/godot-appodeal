@@ -278,6 +278,14 @@ func validateIAP(purchaseDetails:Dictionary) -> void:
 func muteVideosIfCallsMuted(mute:bool) -> void:
 	_appodeal.muteVideosIfCallsMuted(mute)
 
+# Set self-hosted Bidon environment endpoint
+func setBidonEndpoint(endpoint:String) -> void:
+	_appodeal.setBidonEndpoint(endpoint)
+
+# Get self-hosted Bidon environment endpoint
+func getBidonEndpoint() -> String:
+	return _appodeal.getBidonEndpoint()
+
 # Connects JNISingletone signals with the callback functions in this script.
 func connectSignals() -> void:
 	_appodeal.connect("interstitial_loaded", self, "_interstitial_loaded") # Emitted when interstitial has been loaded and cached (precached:bool)

@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.Map;
 
 import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.AppodealServices;
 import com.appodeal.ads.BannerCallbacks;
 import com.appodeal.ads.InterstitialCallbacks;
 import com.appodeal.ads.MrecCallbacks;
@@ -613,5 +614,17 @@ public class GodotAppodeal extends GodotPlugin {
                 emitSignal("iap_validate_failed", signalMessage.toString());
             }
         });
+    }
+
+    @UsedByGodot
+    public void setBidonEndpoint(String endpoint) {
+        Appodeal.setBidonEndpoint(endpoint);
+    }
+
+    @UsedByGodot
+    public String getBidonEndpoint() {
+        String endpoint = Appodeal.getBidonEndpoint();
+        if (endpoint == null) return "";
+        return endpoint;
     }
 }
