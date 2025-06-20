@@ -36,7 +36,7 @@ signal interstitial_shown()
 signal interstitial_closed()
 signal interstitial_clicked()
 signal interstitial_expired()
-signal banner_loaded(precached)
+signal banner_loaded(heightDpi, precached)
 signal banner_load_failed()
 signal banner_shown()
 signal banner_show_failed()
@@ -65,43 +65,42 @@ var _appodeal : JNISingleton = null
 
 func _ready() -> void:
 	if Engine.has_singleton("GodotAppodeal"):
-		print("%s : singletone found" % name)
+		output("singleton found")
 		_appodeal = Engine.get_singleton("GodotAppodeal")
+		connectSignals()
+	else:
+		output("singleton not found")
 
+func output(message) -> void:
+	print("%s: %s" % [name, message])
+
+func initializationExample() -> void:
 		# It's easier to autocache ads rather than to cache them manually, however this might cause
 		# performance issues if the ads will have to cache during the gameplay. Also autocaching tends
 		# to hurt your fillrate and display rate drastically when it comes to ads other than banners,
 		# so you should probably consider manual caching instead.
-
 		setAutocache(false, AdType.INTERSTITIAL)
 
 		# When you need to logcat and trace possible problems or performance issues regarding ads,
 		# you should try setting LogLevel to LogLevel.DEBUG or LogLevel.VERBOSE, but be advised that
 		# high logging levels (VERBOSE especially) tend to decrease performance and thus you should keep
 		# LogLevel.NONE for production builds.
-
 		setLogLevel(LogLevel.NONE)
 
 		# If testing is enabled, the game will only show test ads. This behaviour can be tweaked in the
 		# Appodeal control panel in your app's settings, but you probably want to keep testing disabled
 		# for profuction builds anyway.
-
-		print("%s : WARNING! TESTING ENABLED" % name)
+		output("WARNING! TESTING ENABLED")
 		setTestingEnabled(true)
 
 		# Make sure to call connectSignals() once, otherwise you won't get any callbacks.
-
 		connectSignals()
 
 		# If you want to disable Appodeal Consent Manager and manage user data consent on your own,
-        # make sure to set GDPR and CCPA consent status BEFORE calling initialize(). It's recommended
-        # to let Appodeal Consent Manager do it's job though.
-
-        print("%s : initializing ..." % name)
-        initialize(ProjectSettings.get_setting("Appodeal/AppKey"), AdType.INTERSTITIAL|AdType.REWARDED_VIDEO|AdType.BANNER)
-
-	else:
-		print("%s : Appodeal singletone not found" % name)
+		# make sure to set GDPR and CCPA consent status BEFORE calling initialize(). It's recommended
+		# to let Appodeal Consent Manager do it's job though.
+		output("initializing...")
+		initialize(ProjectSettings.get_setting("Appodeal/AppKey"), AdType.INTERSTITIAL|AdType.REWARDED_VIDEO|AdType.BANNER)
 
 # An example of how you can show an interstitial ad.
 func showInterstitial() -> void:
@@ -109,9 +108,9 @@ func showInterstitial() -> void:
 		return
 	if canShow(ShowStyle.INTERSTITIAL):
 		showAd(ShowStyle.INTERSTITIAL)
-		print("%s : showing interstitial" % name)
+		output("showing interstitial")
 	else:
-		print("%s : can't show interstitial, skipping" % name)
+		output("can't show interstitial, skipping")
 
 # An example of how you can show a rewarded ad.
 func showRewardedAd() -> void:
@@ -119,9 +118,9 @@ func showRewardedAd() -> void:
 		return
 	if canShow(ShowStyle.REWARDED_VIDEO):
 		showAd(ShowStyle.REWARDED_VIDEO)
-		print("%s : showing rewarded video" % name)
+		output("showing rewarded video")
 	else:
-		print("%s : can't show rewarded video, skipping" % name)
+		output("can't show rewarded video, skipping")
 
 # Initializes the SDK. If no consent settings provided before calling this, will also summon ConsentScreen.
 func initialize(appKey:String, adTypes) -> void:
@@ -151,6 +150,10 @@ func cacheAd(adType:int) -> void:
 # Destroys a cached ad
 func destroy(adType:int) -> void:
 	_appodeal.destroy(adType)
+
+# Destroys cached ads for all ad types
+func destroyAllAdTypes() -> void:
+	_appodeal.destroyAllAdTypes()
 
 # Returns true if the given ad type is cached.
 func isAdPrecached(adType:int) -> bool:
@@ -329,140 +332,140 @@ func connectSignals() -> void:
 #---------------#
 
 func _initialization_finished(message_string) -> void:
+	output("initialization finished with message: %s" % message_string)
 	emit_signal("initialization_finished", message_string)
-	print("%s: initialization finished with message: %s" % [name, message_string])
 
 func _ad_revenue_received(revenueInfo:Dictionary) -> void:
-    #Dictionary contents will be as follows:
-    # networkName : String - The name of the ad network, guaranteed not to be null.
-    # demandSource : String - The demand source name and bidder name in case of impression from real-time bidding, guaranteed not to be null.
-    # adUnitName : String - Unique ad unit name guaranteed not to be null.
-    # placement : String - Appodeal's placement name, guaranteed not to be null.
-    # revenue : float - The ad's revenue amount or 0 if it doesn't exist.
-    # adType : int - Appodeal ad type.
-    # adTypeString : String - Appodeal ad type as string presentation.
-    # platform : String - Appodeal platform name.
-    # currency : String - Current currency supported by Appodeal (USD) as string presentation.
-    # revenuePrecision - The revenue precision, which can be:
-    #### 1. 'exact' - programmatic revenue is the resulting price of the auction
-    #### 2. 'publisher_defined' - revenue from crosspromo campaigns
-    #### 3. 'estimated' - revenue based on ad network pricefloors or historical eCPM
-    #### 4. 'undefined' - revenue amount is not defined
-    emit_signal("ad_revenue_received", revenueInfo)
-    print("%s: ad revenue received" % name)
+	#Dictionary contents will be as follows:
+	# networkName : String - The name of the ad network, guaranteed not to be null.
+	# demandSource : String - The demand source name and bidder name in case of impression from real-time bidding, guaranteed not to be null.
+	# adUnitName : String - Unique ad unit name guaranteed not to be null.
+	# placement : String - Appodeal's placement name, guaranteed not to be null.
+	# revenue : float - The ad's revenue amount or 0 if it doesn't exist.
+	# adType : int - Appodeal ad type.
+	# adTypeString : String - Appodeal ad type as string presentation.
+	# platform : String - Appodeal platform name.
+	# currency : String - Current currency supported by Appodeal (USD) as string presentation.
+	# revenuePrecision - The revenue precision, which can be:
+	#### 1. 'exact' - programmatic revenue is the resulting price of the auction
+	#### 2. 'publisher_defined' - revenue from crosspromo campaigns
+	#### 3. 'estimated' - revenue based on ad network pricefloors or historical eCPM
+	#### 4. 'undefined' - revenue amount is not defined
+	emit_signal("ad_revenue_received", revenueInfo)
+	print("%s: ad revenue received" % name)
 
 func _interstitial_load_failed() -> void:
 	emit_signal("interstitial_load_failed")
-	print("%s : interstitial_load_failed" % name)
+	output("interstitial_load_failed")
 
 func _interstitial_shown() -> void:
 	emit_signal("interstitial_shown")
-	print("%s : interstitial_shown" % name)
+	output("interstitial_shown")
 
 func _interstitial_show_failed() -> void:
 	emit_signal("interstitial_show_failed")
-	print("%s : interstitial_show_failed" % name)
+	output("interstitial_show_failed")
 
 func _interstitial_clicked() -> void:
 	emit_signal("interstitial_clicked")
-	print("%s : interstitial_clicked" % name)
+	output("interstitial_clicked")
 
 func _interstitial_closed() -> void:
 	emit_signal("interstitial_closed")
-	print("%s : interstitial_close" % name)
+	output("interstitial_close")
 
 func _interstitial_expired() -> void:
 	emit_signal("interstitial_expired")
-	print("%s : interstitial_expired" % name)
+	output("interstitial_expired")
 
 func _interstitial_loaded(precached:bool) -> void:
 	emit_signal("interstitial_loaded", precached)
-	print("%s : interstitial_loaded" % name)
+	output("interstitial_loaded")
 
-func _banner_loaded(precached) -> void:
-	emit_signal("banner_loaded", precached)
-	print("%s : banner_loaded" % name)
+func _banner_loaded(heightDpi, precached) -> void:
+	emit_signal("banner_loaded", heightDpi, precached)
+	output("banner_loaded")
 
 func _banner_load_failed() -> void:
 	emit_signal("banner_load_failed")
-	print("%s : banner_load_failed" % name)
+	output("banner_load_failed")
 
 func _banner_shown() -> void:
 	emit_signal("banner_shown")
-	print("%s : banner_shown" % name)
+	output("banner_shown")
 
 func _banner_show_failed() -> void:
 	emit_signal("banner_show_failed")
-	print("%s : banner_show_failed" % name)
+	output("banner_show_failed")
 
 func _banner_clicked() -> void:
 	emit_signal("banner_clicked")
-	print("%s : banner_clicked" % name)
+	output("banner_clicked")
 
 func _banner_expired() -> void:
 	emit_signal("banner_expired")
-	print("%s : banner_expired" % name)
+	output("banner_expired")
 
 func _rewarded_video_loaded(precached:bool) -> void:
 	emit_signal("rewarded_video_loaded", precached)
-	print("%s : rewarded_video_loaded" % name)
+	output("rewarded_video_loaded")
 
 func _rewarded_video_load_failed() -> void:
 	emit_signal("rewarded_video_load_failed")
-	print("%s : rewarded_video_load_failed" % name)
+	output("rewarded_video_load_failed")
 
 func _rewarded_video_shown() -> void:
 	emit_signal("rewarded_video_shown")
-	print("%s : rewarded_video_shown" % name)
+	output("rewarded_video_shown")
 	
 func _rewarded_video_show_failed() -> void:
 	emit_signal("rewarded_video_show_failed")
-	print("%s : rewarded_video_show_failed" % name)
+	output("rewarded_video_show_failed")
 
 func _rewarded_video_finished(amount:float, currency) -> void:
 	emit_signal("rewarded_video_finished", amount, currency)
-	print("%s : rewarded_video_finished" % name)
+	output("rewarded_video_finished")
 
 func _rewarded_video_closed(finished:bool) -> void:
 	emit_signal("rewarded_video_closed", finished)
-	print("%s : rewarded_video_closed" % name)
+	output("rewarded_video_closed")
 
 func _rewarded_video_expired() -> void:
 	emit_signal("rewarded_video_expired")
-	print("%s : rewarded_video_expired" % name)
+	output("rewarded_video_expired")
 
 func _rewarded_video_clicked() -> void:
 	emit_signal("rewarded_video_clicked")
-	print("%s : rewarded_video_clicked" % name)
+	output("rewarded_video_clicked")
 
 func _mrec_loaded(precached:bool) -> void:
 	emit_signal("mrec_loaded", precached)
-	print("%s : mrec_loaded" % name)
+	output("mrec_loaded")
 
 func _mrec_load_failed() -> void:
 	emit_signal("mrec_load_failed")
-	print("%s : mrec_load_failed" % name)
+	output("mrec_load_failed")
 
 func _mrec_shown() -> void:
 	emit_signal("mrec_shown")
-	print("%s : mrec_shown" % name)
+	output("mrec_shown")
 
 func _mrec_show_failed() -> void:
 	emit_signal("mrec_show_failed")
-	print("%s : mrec_show_failed" % name)
+	output("mrec_show_failed")
 
 func _mrec_clicked() -> void:
 	emit_signal("mrec_clicked")
-	print("%s : mrec_clicked" % name)
+	output("mrec_clicked")
 
 func _mrec_expired() -> void:
 	emit_signal("mrec_expired")
-	print("%s : mrec expired" % name)
+	output("mrec expired name")
 
 func _iap_validate_success(message:String) -> void:
 	emit_signal("iap_validate_success", message)
-	print("%s : iap_validate_success" % name)
+	output("iap_validate_success")
 
 func _iap_validate_failed(message:String) -> void:
 	emit_signal("iap_validate_failed", message)
-	print("%s : iap_validate_failed" % name)
+	output("iap_validate_failed")

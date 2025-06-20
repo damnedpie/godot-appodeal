@@ -1,10 +1,10 @@
-# Godot Appodeal 3.5.2
+# Godot Appodeal 3.7.0
 [![Godot](https://img.shields.io/badge/Godot%20Engine-3.6-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
-[![Appodeal](https://img.shields.io/badge/Appodeal_3.5.2-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
+[![Appodeal](https://img.shields.io/badge/Appodeal_3.7.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
 [![GitHub License](https://img.shields.io/github/license/damnedpie/godot-appodeal?style=for-the-badge)](#)
 [![GitHub Repo stars](https://img.shields.io/github/stars/damnedpie/godot-appodeal?style=for-the-badge&logo=github&logoSize=auto&color=%23FFD700)](#)
 
-Appodeal SDK 3.5.2 Android plugin for Godot. Built on Godot 3.6 AAR.
+Appodeal SDK 3.7.0 Android plugin for Godot. Built on Godot 3.6 AAR.
 
 ## Setup
 
@@ -132,5 +132,5 @@ Just like with plain banners, it's best to use autocaching with MRECs. To show a
 
 ## Building
 
-If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory. Make sure to provide actual Godot build template ``(godot-lib.release.aar)`` for the engine version you are using at ``godotappodeal\libs`` folder.
+If you want to rebuild the plugin, just run ``.\gradlew build`` from plugin project root directory.
 

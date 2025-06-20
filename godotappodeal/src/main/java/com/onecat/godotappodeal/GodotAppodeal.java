@@ -40,6 +40,7 @@ import org.godotengine.godot.plugin.UsedByGodot;
 public class GodotAppodeal extends GodotPlugin {
     private Activity activity;
     private FrameLayout layout = null;
+    private MrecView mrecView = null;
 
     public GodotAppodeal(Godot godot) {
         super(godot);
@@ -51,6 +52,12 @@ public class GodotAppodeal extends GodotPlugin {
     public View onMainCreate(Activity activity) {
         layout = new FrameLayout(activity);
         return layout;
+    }
+
+    @Override
+    public void onMainDestroy() {
+        destroyAllAdTypes();
+        super.onMainDestroy();
     }
 
     @NonNull
@@ -72,7 +79,7 @@ public class GodotAppodeal extends GodotPlugin {
         signalInfoSet.add(new SignalInfo("interstitial_clicked"));
         signalInfoSet.add(new SignalInfo("interstitial_expired"));
         // Banner
-        signalInfoSet.add(new SignalInfo("banner_loaded", Boolean.class));
+        signalInfoSet.add(new SignalInfo("banner_loaded", Integer.class, Boolean.class));
         signalInfoSet.add(new SignalInfo("banner_load_failed"));
         signalInfoSet.add(new SignalInfo("banner_shown"));
         signalInfoSet.add(new SignalInfo("banner_show_failed"));
@@ -164,8 +171,8 @@ public class GodotAppodeal extends GodotPlugin {
         if((types&Appodeal.BANNER) != 0) {
             Appodeal.setBannerCallbacks(new BannerCallbacks() {
                 @Override
-                public void onBannerLoaded(int i, boolean b) {
-                    emitSignal("banner_loaded", b);
+                public void onBannerLoaded(int hDpi, boolean b) {
+                    emitSignal("banner_loaded", hDpi, b);
                 }
 
                 @Override
@@ -452,6 +459,15 @@ public class GodotAppodeal extends GodotPlugin {
     }
 
     @UsedByGodot
+    public void destroyAllAdTypes() {
+        Appodeal.destroy(Appodeal.INTERSTITIAL);
+        Appodeal.destroy(Appodeal.BANNER);
+        Appodeal.destroy(Appodeal.NATIVE);
+        Appodeal.destroy(Appodeal.REWARDED_VIDEO);
+        Appodeal.destroy(Appodeal.MREC);
+    }
+
+    @UsedByGodot
     public void setSegmentFilter(Dictionary filter) {
         String[] keys = filter.get_keys();
         for (String key : keys) {
@@ -501,7 +517,7 @@ public class GodotAppodeal extends GodotPlugin {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                MrecView mrecView = Appodeal.getMrecView(activity);
+                mrecView = Appodeal.getMrecView(activity);
                 layout.addView(mrecView);
             }
         });
