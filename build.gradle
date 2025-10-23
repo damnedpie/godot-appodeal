@@ -1,27 +1,68 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:8.2.0"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
+plugins {
+    id("com.android.library")
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url "https://artifactory.appodeal.com/appodeal"
+ext.pluginVersionCode = 1
+ext.pluginVersionName = "3.10.0"
+ext.zipName = "godot-appodeal"
+ext.godotVersion = "3.6.2"
+
+android {
+    compileSdk 35
+    namespace "com.onecat.godotappodeal"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode pluginVersionCode
+        versionName pluginVersionName
+        consumerProguardFiles("proguard-rules.pro")
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+    ndkVersion '28.1.13356709'
+    buildToolsVersion '35.0.0'
+    libraryVariants.configureEach { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "GodotAppodeal.$pluginVersionName.${variant.name}.aar"
         }
     }
 }
 
-tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+dependencies {
+    // Getting Godot dependency locally
+    //compileOnly fileTree(dir:"libs", include:["godot-lib.release.aar"])
+    // Intended way of getting Godot dependencies
+    compileOnly 'org.godotengine:godot:3.6.2.stable'
+    compileOnly 'com.appodeal.ads:sdk:3.10.0.0'
+}
+
+tasks.register('buildIntoRelease', Copy) {
+    group = "build"
+    dependsOn tasks.build
+    from([buildDir.absolutePath, 'outputs', 'aar'].join(File.separator))
+    include("GodotAppodeal.${pluginVersionName}.release.aar")
+    into([rootDir.absolutePath, 'release'].join(File.separator))
+}
+
+tasks.register('buildIntoReleaseAndPrepareForGithub', Zip) {
+    group = "build"
+    dependsOn tasks.buildIntoRelease
+    from([rootDir.absolutePath, 'release'].join(File.separator))
+    include("*.gd", "*.gdap", "*.aar")
+    archiveFileName = "${zipName}-${pluginVersionName}-${godotVersion}.zip"
+    destinationDirectory = file([rootDir.absolutePath, 'release'].join(File.separator))
+    def metaTxt = new File([rootDir.absolutePath, 'release', "github-meta.txt"].join(File.separator))
+    metaTxt.text = "SDK ${pluginVersionName}, Godot ${godotVersion}+, rev.${pluginVersionCode}"
+    metaTxt.text += "\nSDK${pluginVersionName}GD${godotVersion}rev${pluginVersionCode}"
 }

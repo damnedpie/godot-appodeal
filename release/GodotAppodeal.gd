@@ -289,6 +289,10 @@ func setBidonEndpoint(endpoint:String) -> void:
 func getBidonEndpoint() -> String:
 	return _appodeal.getBidonEndpoint()
 
+# Returns true if the device has WIFI or Mobile traffic enabled. This doesn't guarantee real internet connection.
+func isWifiOrMobileInternetEnabled() -> bool:
+	return _appodeal.isWifiOrMobileInternetEnabled()
+
 # Connects JNISingletone signals with the callback functions in this script.
 func connectSignals() -> void:
 	_appodeal.connect("interstitial_loaded", self, "_interstitial_loaded") # Emitted when interstitial has been loaded and cached (precached:bool)

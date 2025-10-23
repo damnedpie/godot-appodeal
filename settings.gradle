@@ -1,2 +1,26 @@
-include ':godotappodeal'
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://artifactory.appodeal.com/appodeal"
+        }
+        gradlePluginPortal()
+    }
+    plugins {
+        id("com.android.library") version "8.6.1"
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://artifactory.appodeal.com/appodeal"
+        }
+    }
+}
+
 rootProject.name = "Godot Appodeal Plugin"
