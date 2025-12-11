@@ -1,10 +1,10 @@
-# Godot Appodeal 3.10.0
+# Godot Appodeal 3.12.0
 [![Godot](https://img.shields.io/badge/Godot%20Engine-3.6.2-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
-[![Appodeal](https://img.shields.io/badge/Appodeal_3.10.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
+[![Appodeal](https://img.shields.io/badge/Appodeal_3.12.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
 [![GitHub License](https://img.shields.io/github/license/damnedpie/godot-appodeal?style=for-the-badge)](https://github.com/damnedpie/godot-appodeal/blob/main/LICENSE)
 [![GitHub Repo stars](https://img.shields.io/github/stars/damnedpie/godot-appodeal?style=for-the-badge&logo=github&logoSize=auto&color=%23FFD700)](https://github.com/damnedpie/godot-appodeal/stargazers)
 
-Appodeal SDK 3.10.0 Android plugin for Godot. Built on Godot 3.6.2 AAR.
+Appodeal SDK 3.12.0 Android plugin for Godot. Built on Godot 3.6.2 AAR.
 
 ## Setup
 
