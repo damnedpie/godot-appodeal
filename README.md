@@ -1,10 +1,10 @@
-# Godot Appodeal 3.12.0
+# Godot Appodeal 4.0.0
 [![Godot](https://img.shields.io/badge/Godot%20Engine-3.6.2-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
-[![Appodeal](https://img.shields.io/badge/Appodeal_3.12.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
+[![Appodeal](https://img.shields.io/badge/Appodeal_4.0.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
 [![GitHub License](https://img.shields.io/github/license/damnedpie/godot-appodeal?style=for-the-badge)](https://github.com/damnedpie/godot-appodeal/blob/main/LICENSE)
 [![GitHub Repo stars](https://img.shields.io/github/stars/damnedpie/godot-appodeal?style=for-the-badge&logo=github&logoSize=auto&color=%23FFD700)](https://github.com/damnedpie/godot-appodeal/stargazers)
 
-Appodeal SDK 3.12.0 Android plugin for Godot. Built on Godot 3.6.2 AAR.
+Appodeal SDK 4.0.0 Android plugin for Godot. Built on Godot 3.6.2 AAR.
 
 ## Setup
 
@@ -16,13 +16,7 @@ Make sure to open your Godot project, go to Project -> Settings and add a new ``
 
 ### AD-ID permission
 
-It's mandatory to have the ``com.google.android.gms.ads.AD_ID`` permission in your ``AndroidManifest.xml`` for ad networks to obtain the AdID of the device. Without this permission advertising SDKs can't operate and will cause crashes, so add the following permission to your project's ``AndroidManifest.xml``:
-
-```xml
-<uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
-```
-
-Make sure to add it between `<!--CHUNK_USER_PERMISSIONS_BEGIN-->` and `<!--CHUNK_USER_PERMISSIONS_END-->` comments so it won't get deleted by Godot on export.
+It's mandatory to have the ``com.google.android.gms.ads.AD_ID`` permission in your ``AndroidManifest.xml`` for ad networks to obtain the AdID of the device. Without this permission advertising SDKs can't operate and will cause crashes, so add it to your custom permissions in the export template.
 
 ### AdMob
 
