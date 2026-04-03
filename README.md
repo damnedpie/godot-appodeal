@@ -1,16 +1,17 @@
 # Godot Appodeal 4.0.0
-[![Godot](https://img.shields.io/badge/Godot%20Engine-3.6.2-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
 [![Appodeal](https://img.shields.io/badge/Appodeal_4.0.0-red?style=for-the-badge&logoSize=auto)](https://appodeal.com/)
+[![Godot](https://img.shields.io/badge/Godot%20Engine-3.6.2-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
+[![Godot](https://img.shields.io/badge/Godot%20Engine-4.6.1-blue?style=for-the-badge&logo=godotengine&logoSize=auto)](https://godotengine.org/)
 [![GitHub License](https://img.shields.io/github/license/damnedpie/godot-appodeal?style=for-the-badge)](https://github.com/damnedpie/godot-appodeal/blob/main/LICENSE)
 [![GitHub Repo stars](https://img.shields.io/github/stars/damnedpie/godot-appodeal?style=for-the-badge&logo=github&logoSize=auto&color=%23FFD700)](https://github.com/damnedpie/godot-appodeal/stargazers)
 
-Appodeal SDK 4.0.0 Android plugin for Godot. Built on Godot 3.6.2 AAR.
+Appodeal SDK 4.0.0 Android plugin for Godot. Built on Godot 3.6.2 / Godot 4.6.1 dependency.
 
 ## Setup
 
 ### Project integration
 
-Grab the``GodotAppodeal`` plugin binary (.aar) and config (.gdap) from the releases page and put both into ``res://android/plugins``. For easy start, you can also use my ``GodotAppodeal.gd`` script (it's very well documented).
+Grab the``GodotAppodeal`` plugin binary (.aar) and config (.gdap) from `godot3` or `godot4` folder and put both into ``res://android/plugins``. For easy start, you can also use my ``GodotAppodeal.gd`` script (it's very well documented).
 
 Make sure to open your Godot project, go to Project -> Settings and add a new ``"Appodeal/AppKey" property (String)``. Store your Appodeal AppKey inside this property and reference it via ``ProjectSettings.get_setting("Appodeal/AppKey")``.
 
