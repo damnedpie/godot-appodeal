@@ -289,6 +289,12 @@ func setBidonEndpoint(endpoint:String) -> void:
 func getBidonEndpoint() -> String:
 	return _appodeal.getBidonEndpoint()
 
+func setAppodealEndpoint(endpoint:String) -> void:
+	_appodeal.setAppodealEndpoint(endpoint)
+
+func getAppodealEndpoint() -> String:
+	_appodeal.getAppodealEndpoint()
+
 # Returns true if the device has WIFI or Mobile traffic enabled. This doesn't guarantee real internet connection.
 func isWifiOrMobileInternetEnabled() -> bool:
 	return _appodeal.isWifiOrMobileInternetEnabled()

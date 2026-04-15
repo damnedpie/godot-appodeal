@@ -1,5 +1,5 @@
 ext.pluginVersionCode = 1
-ext.pluginVersionName = "4.0.0"
+ext.pluginVersionName = "4.1.0"
 ext.zipName = "godot-appodeal"
 
 tasks.register('buildGithubRelease', Zip) {

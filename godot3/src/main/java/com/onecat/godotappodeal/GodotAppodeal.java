@@ -636,6 +636,16 @@ public class GodotAppodeal extends GodotPlugin {
 	}
 
 	@UsedByGodot
+	public void setAppodealEndpoint(String endpoint) {
+		Appodeal.setEndpoint(endpoint);
+	}
+
+	@UsedByGodot
+	public String getAppodealEndpoint() {
+		return Appodeal.getEndpoint();
+	}
+
+	@UsedByGodot
 	public boolean isWifiOrMobileInternetEnabled() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
