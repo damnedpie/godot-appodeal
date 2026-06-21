@@ -28,6 +28,7 @@ import java.util.*;
 
 @SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class GodotAppodeal extends GodotPlugin {
+
 	private FrameLayout godotLayout = null;
 	private MrecView mrecView = null;
 
@@ -96,31 +97,58 @@ public class GodotAppodeal extends GodotPlugin {
 
 	private int getAdType(int value) {
 		int res = Appodeal.NONE;
-		if ((value & Appodeal.INTERSTITIAL) != 0) { res |= Appodeal.INTERSTITIAL; }
-		if ((value & Appodeal.BANNER) != 0) { res |= Appodeal.BANNER; }
-		if ((value & Appodeal.NATIVE) != 0) { res |= Appodeal.NATIVE; }
-		if ((value & Appodeal.REWARDED_VIDEO) != 0) { res |= Appodeal.REWARDED_VIDEO; }
-		if ((value & Appodeal.MREC) != 0) { res |= Appodeal.MREC; }
+		if ((value & Appodeal.INTERSTITIAL) != 0) {
+			res |= Appodeal.INTERSTITIAL;
+		}
+		if ((value & Appodeal.BANNER) != 0) {
+			res |= Appodeal.BANNER;
+		}
+		if ((value & Appodeal.NATIVE) != 0) {
+			res |= Appodeal.NATIVE;
+		}
+		if ((value & Appodeal.REWARDED_VIDEO) != 0) {
+			res |= Appodeal.REWARDED_VIDEO;
+		}
+		if ((value & Appodeal.MREC) != 0) {
+			res |= Appodeal.MREC;
+		}
 		return res;
 	}
 
 	private int getShowStyle(int value) {
 		int res = Appodeal.NONE;
-		if ((value & Appodeal.INTERSTITIAL) != 0) { return Appodeal.INTERSTITIAL; }
-		if ((value & Appodeal.BANNER_TOP) != 0) { return Appodeal.BANNER_TOP; }
-		if ((value & Appodeal.BANNER_BOTTOM) != 0) { return Appodeal.BANNER_BOTTOM; }
-		if ((value & Appodeal.BANNER_LEFT) != 0) { return Appodeal.BANNER_LEFT; }
-		if ((value & Appodeal.BANNER_RIGHT) != 0) { return Appodeal.BANNER_RIGHT; }
-		if ((value & Appodeal.REWARDED_VIDEO) != 0) { return Appodeal.REWARDED_VIDEO; }
-		if ((value & Appodeal.MREC) != 0) { return Appodeal.MREC; }
+		if ((value & Appodeal.INTERSTITIAL) != 0) {
+			return Appodeal.INTERSTITIAL;
+		}
+		if ((value & Appodeal.BANNER_TOP) != 0) {
+			return Appodeal.BANNER_TOP;
+		}
+		if ((value & Appodeal.BANNER_BOTTOM) != 0) {
+			return Appodeal.BANNER_BOTTOM;
+		}
+		if ((value & Appodeal.BANNER_LEFT) != 0) {
+			return Appodeal.BANNER_LEFT;
+		}
+		if ((value & Appodeal.BANNER_RIGHT) != 0) {
+			return Appodeal.BANNER_RIGHT;
+		}
+		if ((value & Appodeal.REWARDED_VIDEO) != 0) {
+			return Appodeal.REWARDED_VIDEO;
+		}
+		if ((value & Appodeal.MREC) != 0) {
+			return Appodeal.MREC;
+		}
 		return res;
 	}
 
 	private void setCallbacks(int types) {
 		if ((types & Appodeal.INTERSTITIAL) != 0) {
 			Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+
 				@Override
-				public void onInterstitialLoaded(boolean b) { emitSignal("interstitial_loaded", b); }
+				public void onInterstitialLoaded(boolean b) {
+					emitSignal("interstitial_loaded", b);
+				}
 
 				@Override
 				public void onInterstitialFailedToLoad() {
@@ -155,6 +183,7 @@ public class GodotAppodeal extends GodotPlugin {
 		}
 		if ((types & Appodeal.BANNER) != 0) {
 			Appodeal.setBannerCallbacks(new BannerCallbacks() {
+
 				@Override
 				public void onBannerLoaded(int hDpi, boolean b) {
 					emitSignal("banner_loaded", hDpi, b);
@@ -188,11 +217,16 @@ public class GodotAppodeal extends GodotPlugin {
 		}
 		if ((types & Appodeal.REWARDED_VIDEO) != 0) {
 			Appodeal.setRewardedVideoCallbacks(new RewardedVideoCallbacks() {
-				@Override
-				public void onRewardedVideoLoaded(boolean b) { emitSignal("rewarded_video_loaded", b); }
 
 				@Override
-				public void onRewardedVideoFailedToLoad() { emitSignal("rewarded_video_load_failed"); }
+				public void onRewardedVideoLoaded(boolean b) {
+					emitSignal("rewarded_video_loaded", b);
+				}
+
+				@Override
+				public void onRewardedVideoFailedToLoad() {
+					emitSignal("rewarded_video_load_failed");
+				}
 
 				@Override
 				public void onRewardedVideoShown() {
@@ -200,13 +234,19 @@ public class GodotAppodeal extends GodotPlugin {
 				}
 
 				@Override
-				public void onRewardedVideoShowFailed() { emitSignal("rewarded_video_show_failed"); }
+				public void onRewardedVideoShowFailed() {
+					emitSignal("rewarded_video_show_failed");
+				}
 
 				@Override
-				public void onRewardedVideoFinished(double v, String s) { emitSignal("rewarded_video_finished", v, String.valueOf(s)); }
+				public void onRewardedVideoFinished(double v, String s) {
+					emitSignal("rewarded_video_finished", v, String.valueOf(s));
+				}
 
 				@Override
-				public void onRewardedVideoClosed(boolean b) { emitSignal("rewarded_video_closed", b); }
+				public void onRewardedVideoClosed(boolean b) {
+					emitSignal("rewarded_video_closed", b);
+				}
 
 				@Override
 				public void onRewardedVideoExpired() {
@@ -221,26 +261,40 @@ public class GodotAppodeal extends GodotPlugin {
 		}
 		if ((types & Appodeal.MREC) != 0) {
 			Appodeal.setMrecCallbacks(new MrecCallbacks() {
-				@Override
-				public void onMrecExpired() { emitSignal("mrec_expired"); }
 
 				@Override
-				public void onMrecShowFailed() { emitSignal("mrec_show_failed"); }
+				public void onMrecExpired() {
+					emitSignal("mrec_expired");
+				}
 
 				@Override
-				public void onMrecShown() { emitSignal("mrec_shown"); }
+				public void onMrecShowFailed() {
+					emitSignal("mrec_show_failed");
+				}
 
 				@Override
-				public void onMrecFailedToLoad() { emitSignal("mrec_load_failed"); }
+				public void onMrecShown() {
+					emitSignal("mrec_shown");
+				}
 
 				@Override
-				public void onMrecLoaded(boolean b) { emitSignal("mrec_loaded", b); }
+				public void onMrecFailedToLoad() {
+					emitSignal("mrec_load_failed");
+				}
 
 				@Override
-				public void onMrecClicked() { emitSignal("mrec_clicked"); }
+				public void onMrecLoaded(boolean b) {
+					emitSignal("mrec_loaded", b);
+				}
+
+				@Override
+				public void onMrecClicked() {
+					emitSignal("mrec_clicked");
+				}
 			});
 		}
 		Appodeal.setAdRevenueCallbacks(new AdRevenueCallbacks() {
+
 			@Override
 			public void onAdRevenueReceive(RevenueInfo revenueInfo) {
 				Dictionary godotDict = new Dictionary();
@@ -305,6 +359,7 @@ public class GodotAppodeal extends GodotPlugin {
 				appId,
 				types,
 				new ApdInitializationCallback() {
+
 					@Override
 					public void onInitializationFinished(List<ApdInitializationError> list) {
 						if (list != null && !list.isEmpty()) {
@@ -408,6 +463,7 @@ public class GodotAppodeal extends GodotPlugin {
 	@UsedByGodot
 	public void showAd(int style) {
 		runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				Appodeal.show(getActivity(), getShowStyle(style));
@@ -418,6 +474,7 @@ public class GodotAppodeal extends GodotPlugin {
 	@UsedByGodot
 	public void showAdForPlacement(int style, String placementName) {
 		runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				Appodeal.show(getActivity(), getShowStyle(style), placementName);
@@ -482,6 +539,7 @@ public class GodotAppodeal extends GodotPlugin {
 	@UsedByGodot
 	public void hideBanner() {
 		runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				Appodeal.hide(getActivity(), Appodeal.BANNER);
@@ -495,7 +553,9 @@ public class GodotAppodeal extends GodotPlugin {
 	}
 
 	@UsedByGodot
-	public void setBannerAnimationEnabled(boolean enabled) { Appodeal.setBannerAnimation(enabled); }
+	public void setBannerAnimationEnabled(boolean enabled) {
+		Appodeal.setBannerAnimation(enabled);
+	}
 
 	@UsedByGodot
 	public void setBannerRotation(int leftBannerRotation, int rightBannerRotation) {
@@ -505,6 +565,7 @@ public class GodotAppodeal extends GodotPlugin {
 	@UsedByGodot
 	public void createLayoutForMREC() {
 		runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				mrecView = Appodeal.getMrecView(getActivity());
@@ -516,6 +577,7 @@ public class GodotAppodeal extends GodotPlugin {
 	@UsedByGodot
 	public void hideMREC() {
 		runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				Appodeal.hide(getActivity(), Appodeal.MREC);
@@ -596,31 +658,34 @@ public class GodotAppodeal extends GodotPlugin {
 				.withAdditionalParams(additionalParams) // Appodeal In-app event if needed
 				.build();
 		// Validate InApp purchase
-		Appodeal.validateInAppPurchase(getActivity(), inAppPurchase, new InAppPurchaseValidateCallback() {
-			@Override
-			public void onInAppPurchaseValidateSuccess(InAppPurchase purchase, List<ServiceError> errors) {
-				// In-App purchase validation was validated successfully by at least one connected service
-				StringBuilder signalMessage = new StringBuilder();
-				if (errors != null) {
-					signalMessage.append(String.format("%s validated successfully", purchase.getOrderId()));
-					for (int i = 0; i < errors.size(); i++) {
-						signalMessage.append(String.format("\n%s : %s", errors.get(i).getComponentName(), errors.get(i).getDescription()));
+		Appodeal.validateInAppPurchase(
+				getActivity(), inAppPurchase, new InAppPurchaseValidateCallback() {
+
+					@Override
+					public void onInAppPurchaseValidateSuccess(InAppPurchase purchase, List<ServiceError> errors) {
+						// In-App purchase validation was validated successfully by at least one connected service
+						StringBuilder signalMessage = new StringBuilder();
+						if (errors != null) {
+							signalMessage.append(String.format("%s validated successfully", purchase.getOrderId()));
+							for (int i = 0; i < errors.size(); i++) {
+								signalMessage.append(String.format("\n%s : %s", errors.get(i).getComponentName(), errors.get(i).getDescription()));
+							}
+						}
+						emitSignal("iap_validate_success", signalMessage.toString());
+					}
+
+					@Override
+					public void onInAppPurchaseValidateFail(InAppPurchase purchase, List<ServiceError> errors) {
+						// In-App purchase validation was failed by all connected service
+						StringBuilder signalMessage = new StringBuilder();
+						signalMessage.append(String.format("%s failed to validate", purchase.getOrderId()));
+						for (int i = 0; i < errors.size(); i++) {
+							signalMessage.append(String.format("\n%s : %s", errors.get(i).getComponentName(), errors.get(i).getDescription()));
+						}
+						emitSignal("iap_validate_failed", signalMessage.toString());
 					}
 				}
-				emitSignal("iap_validate_success", signalMessage.toString());
-			}
-
-			@Override
-			public void onInAppPurchaseValidateFail(InAppPurchase purchase, List<ServiceError> errors) {
-				// In-App purchase validation was failed by all connected service
-				StringBuilder signalMessage = new StringBuilder();
-				signalMessage.append(String.format("%s failed to validate", purchase.getOrderId()));
-				for (int i = 0; i < errors.size(); i++) {
-					signalMessage.append(String.format("\n%s : %s", errors.get(i).getComponentName(), errors.get(i).getDescription()));
-				}
-				emitSignal("iap_validate_failed", signalMessage.toString());
-			}
-		});
+		);
 	}
 
 	@UsedByGodot
@@ -644,6 +709,15 @@ public class GodotAppodeal extends GodotPlugin {
 	public String getAppodealEndpoint() {
 		return Appodeal.getEndpoint();
 	}
+
+	/*
+	 * ok now we wait until these morons actually make the enum public
+	 *
+	public void getPrivacyOptionsRequirementStatus() {
+		if (consentInfoUpdateReceived)
+			ConsentManager.getPrivacyOptionsRequirementStatus();
+	}
+	 */
 
 	@UsedByGodot
 	public boolean isWifiOrMobileInternetEnabled() {
