@@ -17,7 +17,6 @@ import com.appodeal.ads.revenue.RevenueInfo;
 import com.appodeal.ads.rewarded.Reward;
 import com.appodeal.ads.service.ServiceError;
 import com.appodeal.ads.utils.Log;
-import com.appodeal.consent.ConsentManager;
 
 import org.godotengine.godot.Dictionary;
 import org.godotengine.godot.Godot;
@@ -32,7 +31,6 @@ public class GodotAppodeal extends GodotPlugin {
 
 	private FrameLayout godotLayout = null;
 	private MrecView mrecView = null;
-	private boolean consentInfoUpdateReceived = false;
 
 	public GodotAppodeal(Godot godot) {
 		super(godot);
@@ -712,14 +710,10 @@ public class GodotAppodeal extends GodotPlugin {
 		return Appodeal.getEndpoint();
 	}
 
-	/*
-	 * ok now we wait until these morons actually make the enum public
-	 *
-	public void getPrivacyOptionsRequirementStatus() {
-		if (consentInfoUpdateReceived)
-			ConsentManager.getPrivacyOptionsRequirementStatus();
+	@UsedByGodot
+	public void setNonPersonalized(boolean nonPersonalized) {
+		Appodeal.setNonPersonalized(nonPersonalized);
 	}
-	 */
 
 	@UsedByGodot
 	public boolean isWifiOrMobileInternetEnabled() {

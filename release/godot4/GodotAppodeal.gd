@@ -295,6 +295,9 @@ func setAppodealEndpoint(endpoint:String) -> void:
 func getAppodealEndpoint() -> String:
 	_appodeal.getAppodealEndpoint()
 
+func setNonPersonalized(nonPersonalized:boolean) -> void:
+	_appodeal.setNonPersonalized(nonPersonalized)
+
 # Returns true if the device has WIFI or Mobile traffic enabled. This doesn't guarantee real internet connection.
 func isWifiOrMobileInternetEnabled() -> bool:
 	return _appodeal.isWifiOrMobileInternetEnabled()

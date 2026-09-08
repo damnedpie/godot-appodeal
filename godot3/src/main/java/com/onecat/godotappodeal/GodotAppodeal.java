@@ -710,14 +710,10 @@ public class GodotAppodeal extends GodotPlugin {
 		return Appodeal.getEndpoint();
 	}
 
-	/*
-	 * ok now we wait until these morons actually make the enum public
-	 *
-	public void getPrivacyOptionsRequirementStatus() {
-		if (consentInfoUpdateReceived)
-			ConsentManager.getPrivacyOptionsRequirementStatus();
+	@UsedByGodot
+	public void setNonPersonalized(boolean nonPersonalized) {
+		Appodeal.setNonPersonalized(nonPersonalized);
 	}
-	 */
 
 	@UsedByGodot
 	public boolean isWifiOrMobileInternetEnabled() {
